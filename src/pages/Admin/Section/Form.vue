@@ -19,6 +19,28 @@
       <q-input filled v-model="title" label="Title" />
 
       <q-editor
+        :toolbar="[
+          ['left', 'center', 'right', 'justify', 'bold', 'italic', 'underline', 'hr', 'link', 'quote', 'unordered', 'ordered', 'outdent', 'indent'],
+          [
+            {
+              label: $q.lang.editor.formatting,
+              icon: $q.iconSet.editor.formatting,
+              list: 'no-icons',
+              options: [
+                'p',
+                'h1',
+                'h2',
+                'h3',
+                'h4',
+                'h5',
+                'h6',
+                'code'
+              ]
+            },
+          ],
+          ['undo', 'redo'],
+          ['viewsource']
+        ]"
         v-model="content"
         filled
         label="Content *"
