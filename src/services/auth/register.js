@@ -20,7 +20,7 @@ const success = (response, resolve) => {
  * When the request fails
  */
 const failed = (error, reject) => {
-  return reject(error.response.data);
+  return reject(error.response);
 };
 
 export default (user) =>
