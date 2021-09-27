@@ -16,23 +16,31 @@
     <h5 class="text-h5 text-bold q-my-md q-pt-lg" v-if="article">
       {{ article.title }}
     </h5>
-    <div v-for="section in sections" :key="section.id">
-      <h6
-        :id="`section-${section.id}`"
-        class="text-h6 q-my-md"
-        style="line-height: 1.6rem"
-        v-if="section.title"
-      >
-        <q-icon
-          :name="section.bookmarked ? 'star' : 'star_outline'"
-          :color="section.bookmarked ? 'yellow-9' : 'primary'"
-          clickable
-          @click="bookmark(section)"
-        />
-        {{ titleCase(section.title) }}
-      </h6>
-      <span v-else :id="`section-${section.id}`"></span>
-      <div v-html="section.content" class="text-body1"></div>
+    <div class="text-center" v-if="loading">
+      <q-spinner-bars
+        color="primary"
+        size="2em"
+      />
+    </div>
+    <div v-else>
+      <div v-for="section in sections" :key="section.id">
+        <h6
+          :id="`section-${section.id}`"
+          class="text-h6 q-my-md"
+          style="line-height: 1.6rem"
+          v-if="section.title"
+        >
+          <q-icon
+            :name="section.bookmarked ? 'star' : 'star_outline'"
+            :color="section.bookmarked ? 'yellow-9' : 'primary'"
+            clickable
+            @click="bookmark(section)"
+          />
+          {{ titleCase(section.title) }}
+        </h6>
+        <span v-else :id="`section-${section.id}`"></span>
+        <div v-html="section.content" class="text-body1"></div>
+      </div>
     </div>
     <q-page-sticky position="bottom-right" :offset="[18, 18]">
       <q-btn fab icon="list" color="primary" @click="tableOfContents = true" />
@@ -75,6 +83,7 @@ export default defineComponent({
   name: "ViewSection",
   data() {
     return {
+      loading: false,
       article: null,
       floatAction: false,
       tableOfContents: false,
@@ -88,6 +97,7 @@ export default defineComponent({
   },
   mounted() {
     this.article = this.chapters.find((c) => +c.id === +this.$route.params.id);
+    this.loading = true;
     if (!this.article) {
       chapterService
         .show(this.$route.params.id)
