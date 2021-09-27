@@ -1,0 +1,29 @@
+// Profile
+export const GET_ACCOUNT = "GET_ACCOUNT";
+export const RESET_PROFILE = "RESET_PROFILE";
+
+// Auth
+export const CHECK_AUTHENTICATION = "CHECK_AUTHENTICATION";
+export const UPDATE_REFRESHING = "UPDATE_REFRESHING";
+export const LOGOUT = "LOGOUT";
+export const LOGIN = "LOGIN";
+
+// Chapters
+export const FETCH_CHAPTERS = "FETCH_CHAPTERS";
+export const APPEND_CHAPTERS = "APPEND_CHAPTERS";
+export const RESET_CHAPTERS = "RESET_CHAPTERS";
+export const FETCH_ALL_CHAPTERS = "FETCH_ALL_CHAPTERS";
+export const CHAPTER_QUERY = "CHAPTER_QUERY";
+
+// Sections
+export const FETCH_SECTIONS = "FETCH_SECTIONS";
+export const APPEND_SECTIONS = "APPEND_SECTIONS";
+export const RESET_SECTIONS = "RESET_SECTIONS";
+export const FETCH_ALL_SECTIONS = "FETCH_ALL_SECTIONS";
+export const SECTION_QUERY = "SECTION_QUERY";
+export const UPDATE_SECTION = "UPDATE_SECTION";
+export const FETCH_SEARCH_RESULTS = "FETCH_SEARCH_RESULTS";
+export const SET_SEARCH_TEXT = "SET_SEARCH_TEXT";
+
+// Bookmark
+export const FETCH_ALL_BOOKMARKS = "FETCH_ALL_BOOKMARKS";
