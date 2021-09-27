@@ -93,8 +93,28 @@ export default defineComponent({
   },
   methods: {
     onSubmit() {
+      this.id ? this.update() : this.save();
+    },
+    save() {
       sectionService
         .store({
+          title: this.title,
+          content: this.content,
+          chapter_id: this.chapter.value,
+        })
+        .then((data) => {
+          this.loading = false;
+          this.$router.push(
+            `/admin/chapters/${this.$route.params.chapter_id}/sections`
+          );
+        })
+        .catch((errors) => {
+          this.loading = false;
+        });
+    },
+    update() {
+      sectionService
+        .update(this.id, {
           title: this.title,
           content: this.content,
           chapter_id: this.chapter.value,
