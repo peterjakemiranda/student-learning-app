@@ -163,8 +163,8 @@ export default defineComponent({
     },
   },
   watch: {
-    article(article) {
-      if (!article) return;
+    loading(loading) {
+      if (loading) return;
       this.goToHash();
     },
   },

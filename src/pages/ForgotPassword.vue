@@ -48,6 +48,7 @@
               </q-form>
               <q-btn
                 dark
+                :loading="loading"
                 @click.prevent="onSubmit"
                 unelevated
                 size="lg"
@@ -86,12 +87,14 @@ export default defineComponent({
   name: "ForgotPassword",
   data() {
     return {
+      loading: false,
       email: "",
       sent: false,
     };
   },
   methods: {
     onSubmit() {
+      this.loading = true;
       authService
         .resetPassword({ email: this.email })
         .then(() => {

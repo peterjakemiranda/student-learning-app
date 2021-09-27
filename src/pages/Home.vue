@@ -21,7 +21,13 @@
       style="padding-top: 68px"
     >
       <q-tab-panel name="myhandbook" class="q-pa-xs">
-        <div>
+        <div class="text-center q-pt-xl" v-if="handbookLoading">
+          <q-spinner-bars
+            color="primary"
+            size="2em"
+          />
+        </div>
+        <div v-else>
           <q-list class="q-pa-sm" separator>
             <q-item
               :to="`/article/${chapter.id}`"
@@ -46,7 +52,13 @@
       </q-tab-panel>
 
       <q-tab-panel name="bookmarks" class="q-pa-xs">
-        <div>
+        <div class="text-center q-pt-xl" v-if="bookmarkLoading">
+          <q-spinner-bars
+            color="primary"
+            size="2em"
+          />
+        </div>
+        <div v-else>
           <q-list class="q-pa-sm" separator>
             <q-item
               clickable
@@ -100,13 +112,14 @@ export default defineComponent({
     }),
   },
   mounted() {
+    this.handbookLoading = true;
     chapterService
       .all()
       .then((data) => {
-        this.loading = false;
+        this.handbookLoading = false;
       })
       .catch((errors) => {
-        this.loading = false;
+        this.handbookLoading = false;
       });
   },
   methods: {
@@ -147,13 +160,14 @@ export default defineComponent({
   watch: {
     tab(tab) {
       if (tab === "bookmarks") {
+        this.bookmarkLoading = true;
         bookmarkService
           .all()
           .then((data) => {
-            this.loading = false;
+            this.bookmarkLoading = false;
           })
           .catch((errors) => {
-            this.loading = false;
+            this.bookmarkLoading = false;
           });
       }
     },

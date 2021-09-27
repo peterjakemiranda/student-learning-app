@@ -71,6 +71,7 @@
             </q-card-section>
             <q-card-actions class="q-px-lg">
               <q-btn
+                :loading="loading"
                 @click.prevent="onSubmit"
                 unelevated
                 size="lg"
@@ -109,6 +110,7 @@ export default defineComponent({
   name: "Login",
   data() {
     return {
+      loading: false,
       email: "",
       password: "",
       invalidCredentials: false,
@@ -116,6 +118,7 @@ export default defineComponent({
   },
   methods: {
     onSubmit() {
+      this.loading = true;
       authService
         .login({ email: this.email, password: this.password })
         .then(() => {

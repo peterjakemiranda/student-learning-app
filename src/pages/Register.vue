@@ -118,6 +118,7 @@
             </q-card-section>
             <q-card-actions class="q-px-lg">
               <q-btn
+                :loading="loading"
                 @click.prevent="onSubmit"
                 unelevated
                 size="lg"
@@ -146,9 +147,10 @@ import { defineComponent } from "vue";
 import authService from "./../services/auth";
 
 export default defineComponent({
-  name: "Login",
+  name: "Register",
   data() {
     return {
+      loading: false,
       first_name: "",
       last_name: "",
       email: "",
@@ -158,6 +160,7 @@ export default defineComponent({
   },
   methods: {
     onSubmit() {
+      this.loading = true;
       authService
         .register({
           first_name: this.first_name,
@@ -170,10 +173,6 @@ export default defineComponent({
           this.loading = false;
         })
         .catch((errors) => {
-          console.log(errors);
-          if (errors.error) {
-            this.invalidCredentials = true;
-          }
           this.loading = false;
         });
     },

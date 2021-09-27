@@ -35,7 +35,13 @@
 
         <template v-slot:hint> Search the entire handbook </template>
       </q-input>
-      <q-list class="q-pa-xs" separator v-if="sections.length">
+      <div class="text-center" v-if="loading">
+        <q-spinner-bars
+          color="primary"
+          size="2em"
+        />
+      </div>
+      <q-list class="q-pa-xs" separator v-else-if="sections.length">
         <q-item
           :to="`/article/${section.chapter_id}#section-${section.id}`"
           v-for="section in sections"
@@ -62,14 +68,13 @@
 import { defineComponent } from "vue";
 import { mapGetters, mapMutations } from "vuex";
 import sectionService from "../../services/section";
-import chapterService from "../../services/chapter";
-import bookmarkService from "../../services/bookmark";
-import store from "../../store";
 
 export default defineComponent({
   name: "Search",
   data() {
-    return {};
+    return {
+      loading: false,
+    };
   },
   computed: {
     ...mapGetters({
@@ -113,6 +118,7 @@ export default defineComponent({
         this.$store.dispatch("resetSections");
         return;
       }
+      this.loading = true;
       sectionService
         .search(this.searchText)
         .then((data) => {
