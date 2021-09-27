@@ -12,7 +12,7 @@ import { router } from "../router";
 // for each client)
 store.dispatch("checkAuthentication");
 
-axios.defaults.baseURL = "http://192.168.8.101:8083/";
+axios.defaults.baseURL = "https://api.handbook.digital/";
 axios.defaults.headers.common.Accept = "application/json";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
