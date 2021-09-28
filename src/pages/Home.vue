@@ -59,7 +59,7 @@
           />
         </div>
         <div v-else>
-          <q-list class="q-pa-sm" separator>
+          <q-list class="q-pa-sm" separator v-if="bookmarks.length">
             <q-item
               clickable
               @click.prevent="viewArticle(bookmark)"
@@ -83,6 +83,9 @@
               </q-item-section>
             </q-item>
           </q-list>
+          <div v-else class="text-body2 text-center q-pa-lg text-grey-6">
+            No bookmarks yet.
+          </div>
         </div>
       </q-tab-panel>
     </q-tab-panels>
