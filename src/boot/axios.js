@@ -14,7 +14,6 @@ store.dispatch("checkAuthentication");
 
 axios.defaults.baseURL = "http://api.handbook.digital";
 axios.defaults.headers.common.Accept = "application/json";
-axios.defaults.headers.common["Access-Control-Allow-Origin"] = "*";
 
 const logoutErrors = [
   40102, // No token provided
