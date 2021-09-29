@@ -17,14 +17,14 @@
             class="bg-transparent shadow-0 full-height"
             style="width: 320px"
           >
-            <h4 class="text-h5 text-center q-pt-lg q-my-md text-weight-bold">
-              <span
-                class="text-blue-2 block"
-                style="font-family: Georgia, serif"
-                >SDSSU</span
-              >
-              Student Handbook
-            </h4>
+            <div class="text-center">
+              <q-avatar size="72px">
+                <q-img :src="logoImage" style="width: 72px"/>
+              </q-avatar>
+              <div class="text-h5 text-center q-mb-md text-weight-bold">
+                Student Handbook
+              </div>
+            </div>
             <q-card-section>
               <div
                 class="text-body2 text-center text-red-3"
@@ -50,13 +50,11 @@
                     <q-icon name="email" color="white" />
                   </template>
                 </q-input>
-                <q-input
+                <q-input 
                   square
-                  clearable
                   dark
                   color="white"
-                  v-model="password"
-                  type="password"
+                  v-model="password" :type="isPwd ? 'password' : 'text'"
                   label="Password"
                   lazy-rules
                   :rules="[
@@ -65,6 +63,13 @@
                 >
                   <template v-slot:prepend>
                     <q-icon name="lock" color="white" />
+                  </template>
+                  <template v-slot:append>
+                    <q-icon
+                      :name="isPwd ? 'visibility_off' : 'visibility'"
+                      class="cursor-pointer"
+                      @click="isPwd = !isPwd"
+                    />
                   </template>
                 </q-input>
               </q-form>
@@ -105,12 +110,15 @@
 <script>
 import { defineComponent } from "vue";
 import authService from "./../services/auth";
+import logoImage from "../assets/sdssu_logo.png";
 
 export default defineComponent({
   name: "Login",
   data() {
     return {
+      logoImage,
       loading: false,
+      isPwd: true,
       email: "",
       password: "",
       invalidCredentials: false,

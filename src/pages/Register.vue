@@ -17,14 +17,14 @@
             class="bg-transparent shadow-0 full-height"
             style="width: 320px"
           >
-            <h4 class="text-h5 text-center q-my-md text-weight-bold">
-              <span
-                class="text-blue-2 block"
-                style="font-family: Georgia, serif"
-                >SDSSU</span
-              >
-              Student Handbook
-            </h4>
+            <div class="text-center">
+              <q-avatar size="72px">
+                <q-img :src="logoImage" style="width: 72px"/>
+              </q-avatar>
+              <div class="text-h5 text-center q-mb-md text-weight-bold">
+                Student Handbook
+              </div>
+            </div>
             <q-card-section>
               <q-form class="q-px-sm q-pt-xs">
                 <q-input
@@ -145,11 +145,13 @@
 <script>
 import { defineComponent } from "vue";
 import authService from "./../services/auth";
+import logoImage from "../assets/sdssu_logo.png";
 
 export default defineComponent({
   name: "Register",
   data() {
     return {
+      logoImage,
       loading: false,
       first_name: "",
       last_name: "",
