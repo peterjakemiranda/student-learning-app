@@ -12,7 +12,7 @@ import { router } from "../router";
 // for each client)
 store.dispatch("checkAuthentication");
 
-axios.defaults.baseURL = "http://api.handbook.digital";
+axios.defaults.baseURL = process.env.API;
 axios.defaults.headers.common.Accept = "application/json";
 
 const logoutErrors = [

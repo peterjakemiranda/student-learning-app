@@ -43,7 +43,7 @@
       </div>
       <q-list class="q-pa-xs" separator v-else-if="sections.length">
         <q-item
-          :to="`/article/${section.chapter_id}#section-${section.id}`"
+          :to="`/course/${section.course_id}#section-${section.id}`"
           v-for="section in sections"
           :key="section.id"
         >
@@ -67,7 +67,7 @@
 <script>
 import { defineComponent } from "vue";
 import { mapGetters, mapMutations } from "vuex";
-import sectionService from "../../services/section";
+import sectionService from "../../services/activity";
 
 export default defineComponent({
   name: "Search",
@@ -96,14 +96,7 @@ export default defineComponent({
     }
   },
   methods: {
-    titleCase(str) {
-      return str
-        .split(" ")
-        .map(function (val) {
-          return val.charAt(0).toUpperCase() + val.substr(1).toLowerCase();
-        })
-        .join(" ");
-    },
+    
     stripTags(str) {
       return str.replace(/<\/?[^>]+(>|$)/g, "").replace(/\&nbsp;/g, "");
     },

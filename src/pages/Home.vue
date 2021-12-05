@@ -1,143 +1,86 @@
 <template>
-  <div>
-    <q-page-sticky expand position="top" style="z-index: 1">
-      <q-tabs
-        v-model="tab"
-        narrow-indicator
-        active-color="blue-8"
-        class="bg-grey-1 full-width"
-      >
-        <q-tab name="myhandbook" label="My Handbook" icon="menu_book" />
-        <q-tab name="bookmarks" label="My Bookmarks" icon="star" />
-      </q-tabs>
+  <div class="q-pa-sm">
+    <q-page-sticky position="top-left" style="z-index: 1;">
+      <div class="text-h5 q-pa-md">My Courses</div>
     </q-page-sticky>
+      <div class="text-center q-pt-xl" v-if="coursesLoading">
+        <q-spinner-bars
+          color="primary"
+          size="2em"
+        />
+      </div>
+      <div style="padding-top: 68px" v-else>
+        <q-card 
+          class="course-card q-mb-md" 
+          flat 
+          bordered
+          @click="gotoCourse(course)"
+          v-for="course in courses"
+          :key="course.id"
+          clickable
+          ripple>
+          <q-card-section horizontal>
+            <q-card-section class="q-pt-xs">
+              <div class="text-overline">{{course.course_code}}</div>
+              <div class="text-h5 q-mt-sm q-mb-xs">{{course.title}}</div>
+              <div class="text-caption text-grey">
+                {{course.description}}
+              </div>
+            </q-card-section>
+          </q-card-section>
 
-    <q-separator />
+          <q-separator />
 
-    <q-tab-panels
-      v-model="tab"
-      animated
-      virtual-scroll
-      style="padding-top: 68px"
-    >
-      <q-tab-panel name="myhandbook" class="q-pa-xs">
-        <div class="text-center q-pt-xl" v-if="handbookLoading">
-          <q-spinner-bars
-            color="primary"
-            size="2em"
-          />
-        </div>
-        <div v-else>
-          <q-list class="q-pa-sm" separator>
-            <q-item
-              :to="`/article/${chapter.id}`"
-              v-for="chapter in chapters"
-              :key="chapter.id"
-            >
-              <q-item-section>
-                <q-item-label class="text-weight-bold text-subtitle1">{{
-                  chapter.title
-                }}</q-item-label>
-                <q-item-label caption lines="2">{{
-                  titleCase(chapter.description)
-                }}</q-item-label>
-              </q-item-section>
-
-              <q-item-section side>
-                <q-icon name="local_library" />
-              </q-item-section>
-            </q-item>
-          </q-list>
-        </div>
-      </q-tab-panel>
-
-      <q-tab-panel name="bookmarks" class="q-pa-xs">
-        <div class="text-center q-pt-xl" v-if="bookmarkLoading">
-          <q-spinner-bars
-            color="primary"
-            size="2em"
-          />
-        </div>
-        <div v-else>
-          <q-list class="q-pa-sm" separator v-if="bookmarks.length">
-            <q-item
-              clickable
-              @click.prevent="viewArticle(bookmark)"
-              v-for="bookmark in bookmarks"
-              :key="bookmark.id"
-            >
-              <q-item-section>
-                <q-item-label class="text-subtitle1">
-                  <q-icon name="star" color="yellow-9" class="q-pa-xs" />
-                  <span>{{ titleCase(bookmark.title) }}</span>
-                </q-item-label>
-              </q-item-section>
-
-              <q-item-section side>
-                <q-btn
-                  flat
-                  icon="delete"
-                  clickable
-                  @click.stop="deleteBookmark(bookmark.id)"
-                />
-              </q-item-section>
-            </q-item>
-          </q-list>
-          <div v-else class="text-body2 text-center q-pa-lg text-grey-6">
-            No bookmarks yet.
-          </div>
-        </div>
-      </q-tab-panel>
-    </q-tab-panels>
+          <q-card-actions>
+            <q-btn flat round icon="event" />
+            <q-btn flat>
+              {{course.period}}
+            </q-btn>
+          </q-card-actions>
+        </q-card>
+      </div>
   </div>
 </template>
 
 <script>
 import { defineComponent } from "vue";
 import { mapGetters, mapMutations } from "vuex";
-import chapterService from "../services/chapter";
+import courseService from "../services/course";
 import bookmarkService from "../services/bookmark";
 import { format } from "quasar";
+import store from "../store";
 
 export default defineComponent({
   name: "PageIndex",
   data() {
     return {
-      tab: "myhandbook",
-      handbookLoading: false,
+      tab: "mycourses",
+      coursesLoading: false,
       bookmarkLoading: false,
     };
   },
   computed: {
     ...mapGetters({
-      chapters: "allChapters",
+      courses: "allCourses",
       bookmarks: "allBookmarks",
     }),
   },
   mounted() {
-    this.handbookLoading = true;
-    chapterService
+    this.coursesLoading = true;
+    courseService
       .all()
       .then((data) => {
-        this.handbookLoading = false;
+        this.coursesLoading = false;
       })
       .catch((errors) => {
-        this.handbookLoading = false;
+        this.coursesLoading = false;
       });
   },
   methods: {
-    titleCase(str) {
-      return str
-        .split(" ")
-        .map(function (val) {
-          return val.charAt(0).toUpperCase() + val.substr(1).toLowerCase();
-        })
-        .join(" ");
-    },
-    viewArticle(bookmark) {
-      console.log(bookmark);
+    
+    viewCourse(bookmark) {
       this.$router.push(
-        `/article/${bookmark.chapter_id}#section-${bookmark.section_id}`
+        `/course/${bookmark.course_id}#section-${bookmark.section_id}`
       );
     },
     deleteBookmark(id) {
@@ -159,6 +102,11 @@ export default defineComponent({
             });
         });
     },
+    gotoCourse(course) {
+      console.log(course);
+      store.dispatch("setCurrentCourse", course);
+      this.$router.push(`/courses/${course.id}`);
+    }
   },
   watch: {
     tab(tab) {

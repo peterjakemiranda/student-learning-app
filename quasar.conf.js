@@ -67,6 +67,11 @@ module.exports = configure(function (ctx) {
           .plugin("eslint-webpack-plugin")
           .use(ESLintPlugin, [{ extensions: ["js", "vue"] }]);
       },
+      env: {
+        API: ctx.dev
+          ? "http://learning-api.local"
+          : "http://sdssu-student-learning.com",
+      },
     },
 
     // Full list of options: https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-devServer

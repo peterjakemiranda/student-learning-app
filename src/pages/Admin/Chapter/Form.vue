@@ -1,6 +1,6 @@
 <template>
   <div class="q-pa-md">
-    <div class="text-h5 q-py-md">{{ id ? "Update" : "Create" }} Article</div>
+    <div class="text-h5 q-py-md">{{ id ? "Update" : "Create" }} Course</div>
 
     <q-form @submit="onSubmit" @reset="onReset" class="q-gutter-md">
       <q-input
@@ -20,7 +20,7 @@
 
       <div class="q-gutter-lg q-pa-lg">
         <q-btn label="Submit" type="submit" color="primary" />
-        <q-btn label="Back" type="submit" to="/admin/chapters" />
+        <q-btn label="Back" type="submit" to="/admin/courses" />
       </div>
     </q-form>
   </div>
@@ -28,10 +28,10 @@
 
 <script>
 import { defineComponent } from "vue";
-import chapterService from "../../../services/chapter";
+import courseService from "../../services/course";
 
 export default defineComponent({
-  name: "AdminChapterForm",
+  name: "AdminCourseForm",
   data() {
     return {
       id: "",
@@ -41,7 +41,7 @@ export default defineComponent({
   },
   created() {
     if (this.$route.params.id) {
-      chapterService
+      courseService
         .show(this.$route.params.id)
         .then((data) => {
           this.id = data.id;
@@ -59,22 +59,22 @@ export default defineComponent({
       this.id ? this.update() : this.save();
     },
     save() {
-      chapterService
+      courseService
         .store({ title: this.title, description: this.description })
         .then((data) => {
           this.loading = false;
-          this.$router.push("/admin/chapters");
+          this.$router.push("/admin/courses");
         })
         .catch((errors) => {
           this.loading = false;
         });
     },
     update() {
-      chapterService
+      courseService
         .update(this.id, { title: this.title, description: this.description })
         .then((data) => {
           this.loading = false;
-          this.$router.push("/admin/chapters");
+          this.$router.push("/admin/courses");
         })
         .catch((errors) => {
           this.loading = false;

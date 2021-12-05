@@ -5,9 +5,12 @@ import * as getters from "./getters";
 // Modules
 import profile from "./modules/profile";
 import auth from "./modules/auth";
-import chapter from "./modules/chapter";
-import section from "./modules/section";
+import course from "./modules/course";
+import activity from "./modules/activity";
 import bookmark from "./modules/bookmark";
+import student from "./modules/student";
+import announcement from "./modules/announcement";
+import quiz from "./modules/quiz";
 
 const debug = process.env.NODE_ENV !== "production";
 
@@ -27,9 +30,12 @@ const store = createStore({
   modules: {
     profile,
     auth,
-    chapter,
-    section,
+    course,
+    activity,
     bookmark,
+    student,
+    announcement,
+    quiz,
   },
 
   /**

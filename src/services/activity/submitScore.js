@@ -1,0 +1,24 @@
+import { axios } from "../../boot/axios";
+const success = (resolve, { data }) => {
+  resolve(data);
+};
+
+const failed = (errors, reject) => {
+  reject(errors);
+};
+
+export default (activityId, answerId, data) =>
+  new Promise((resolve, reject) => {
+    axios
+      .request({
+        url: `api/activity/${activityId}/answer/${answerId}/score`,
+        data,
+        method: "post",
+      })
+      .then((response) => {
+        success(resolve, response);
+      })
+      .catch((error) => {
+        failed(error.response.data, reject);
+      });
+  });

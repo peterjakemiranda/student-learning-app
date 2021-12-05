@@ -18,7 +18,7 @@
         <q-avatar>
           <q-img :src="logoImage" />
         </q-avatar>
-        <q-toolbar-title>Student Handbook</q-toolbar-title>
+        <q-toolbar-title>Student Learning</q-toolbar-title>
       </q-toolbar>
     </q-header>
     <q-drawer
@@ -40,14 +40,14 @@
               <q-icon name="menu_book" />
             </q-item-section>
 
-            <q-item-section> My Handbook </q-item-section>
+            <q-item-section> Dashboard </q-item-section>
           </q-item>
-          <q-item to="/admin/chapters" v-ripple exact v-if="isAdmin">
+          <q-item to="/courses" v-ripple exact v-if="isTeacher">
             <q-item-section avatar>
               <q-icon name="dashboard" />
             </q-item-section>
 
-            <q-item-section> Administration </q-item-section>
+            <q-item-section> Courses </q-item-section>
           </q-item>
           <q-item to="/account" v-ripple exact>
             <q-item-section avatar>
@@ -126,8 +126,8 @@ export default defineComponent({
     ...mapGetters({
       account: "account",
     }),
-    isAdmin() {
-      return window.localStorage.getItem("role") == "admin";
+    isTeacher() {
+      return ["admin","teacher"].includes(window.localStorage.getItem("role"));
     },
   },
   setup() {

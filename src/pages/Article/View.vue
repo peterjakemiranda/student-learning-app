@@ -13,8 +13,8 @@
         <q-breadcrumbs-el icon="local_library" label="Search" />
       </q-breadcrumbs>
     </q-page-sticky>
-    <h5 class="text-h5 text-bold q-my-md q-pt-lg" v-if="article">
-      {{ article.title }}
+    <h5 class="text-h5 text-bold q-my-md q-pt-lg" v-if="course">
+      {{ course.title }}
     </h5>
     <div class="text-center" v-if="loading">
       <q-spinner-bars
@@ -74,8 +74,8 @@
 <script>
 import { defineComponent } from "vue";
 import { mapGetters, mapMutations } from "vuex";
-import sectionService from "../../services/section";
-import chapterService from "../../services/chapter";
+import sectionService from "../../services/activity";
+import courseService from "../../services/course";
 import bookmarkService from "../../services/bookmark";
 import store from "../../store";
 
@@ -84,25 +84,25 @@ export default defineComponent({
   data() {
     return {
       loading: false,
-      article: null,
+      course: null,
       floatAction: false,
       tableOfContents: false,
     };
   },
   computed: {
     ...mapGetters({
-      chapters: "allChapters",
+      courses: "allCourses",
       sections: "allSections",
     }),
   },
   mounted() {
-    this.article = this.chapters.find((c) => +c.id === +this.$route.params.id);
+    this.course = this.courses.find((c) => +c.id === +this.$route.params.id);
     this.loading = true;
-    if (!this.article) {
-      chapterService
+    if (!this.course) {
+      courseService
         .show(this.$route.params.id)
         .then((data) => {
-          this.article = data;
+          this.course = data;
         })
         .catch((err) => {});
     }
@@ -116,14 +116,7 @@ export default defineComponent({
       });
   },
   methods: {
-    titleCase(str) {
-      return str
-        .split(" ")
-        .map(function (val) {
-          return val.charAt(0).toUpperCase() + val.substr(1).toLowerCase();
-        })
-        .join(" ");
-    },
+    
     bookmark(section) {
       const bookmark = !section.bookmarked;
       const payload = Object.assign({}, section);

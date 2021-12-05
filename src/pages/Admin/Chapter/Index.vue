@@ -1,17 +1,17 @@
 <template>
   <div class="q-pa-md q-gutter-md">
-    <h4 class="text-h4 q-mb-xs">Articles</h4>
+    <h4 class="text-h4 q-mb-xs">Courses</h4>
     <q-btn
-      :to="`/admin/chapters/create`"
+      :to="`/admin/courses/create`"
       color="primary"
       icon="add"
-      label="Create Article"
+      label="Create Course"
     />
     <q-list padding>
-      <q-item v-ripple v-for="chapter in chapters" :key="chapter.id">
+      <q-item v-ripple v-for="course in courses" :key="course.id">
         <q-item-section>
-          <q-item-label lines="1">{{ chapter.title }}</q-item-label>
-          <q-item-label caption>{{ chapter.description }}</q-item-label>
+          <q-item-label lines="1">{{ course.title }}</q-item-label>
+          <q-item-label caption>{{ course.description }}</q-item-label>
         </q-item-section>
         <q-item-section side>
           <div class="q-gutter-sm">
@@ -21,7 +21,7 @@
               size="12px"
               color="primary"
               icon="list"
-              :to="`/admin/chapters/${chapter.id}/sections`"
+              :to="`/admin/courses/${course.id}/sections`"
             >
               <q-tooltip anchor="top middle" self="bottom middle">
                 Manage Sections
@@ -32,7 +32,7 @@
               round
               size="12px"
               icon="edit"
-              :to="`/admin/chapters/${chapter.id}/edit`"
+              :to="`/admin/courses/${course.id}/edit`"
             >
               <q-tooltip anchor="top middle" self="bottom middle">
                 Edit
@@ -43,7 +43,7 @@
               round
               size="12px"
               icon="delete"
-              @click="remove(chapter)"
+              @click="remove(course)"
             >
               <q-tooltip anchor="top middle" self="bottom middle">
                 Delete
@@ -59,10 +59,10 @@
 <script>
 import { mapGetters, mapMutations } from "vuex";
 import { defineComponent } from "vue";
-import chapterService from "../../../services/chapter";
+import courseService from "../../services/course";
 
 export default defineComponent({
-  name: "AdminChapterIndex",
+  name: "AdminCourseIndex",
   data() {
     return {
       title: "",
@@ -71,11 +71,11 @@ export default defineComponent({
   },
   computed: {
     ...mapGetters({
-      chapters: "allChapters",
+      courses: "allCourses",
     }),
   },
   mounted() {
-    chapterService
+    courseService
       .all()
       .then((data) => {
         this.loading = false;
@@ -86,17 +86,17 @@ export default defineComponent({
   },
   methods: {
     onReset() {},
-    remove(chapter) {
+    remove(course) {
       this.$q
         .dialog({
           title: "Confirm",
-          message: "Are you sure to delete this article?",
+          message: "Are you sure to delete this course?",
           cancel: true,
           persistent: true,
         })
         .onOk(() => {
-          chapterService
-            .destroy(chapter.id)
+          courseService
+            .destroy(course.id)
             .then((data) => {
               this.loading = false;
             })
