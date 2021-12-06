@@ -1,5 +1,7 @@
 import { axios } from "../../boot/axios";
+import notificationCount from "../notification/count";
 const success = (data, resolve) => {
+  notificationCount();
   resolve(data);
 };
 

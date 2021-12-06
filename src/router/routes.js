@@ -46,6 +46,10 @@ const routes = [
         component: () => import("src/pages/Course/Activity/View.vue"),
       },
       {
+        path: "courses/:id/activities/:activity_id/edit",
+        component: () => import("src/pages/Course/Activity/Form.vue"),
+      },
+      {
         path: "courses/:id/quizzes",
         component: () => import("src/pages/Course/Quiz/Index.vue"),
       },
@@ -56,6 +60,14 @@ const routes = [
       {
         path: "courses/:id/quizzes/:quiz_id",
         component: () => import("src/pages/Course/Quiz/View.vue"),
+      },
+      {
+        path: "courses/:id/quizzes/:quiz_id/edit",
+        component: () => import("src/pages/Course/Quiz/Form.vue"),
+      },
+      {
+        path: "courses/:id/quizzes/:quiz_id/take",
+        component: () => import("src/pages/Course/Quiz/Take.vue"),
       },
       {
         path: "courses/:id/students",
@@ -100,6 +112,37 @@ const routes = [
       {
         path: "courses/:course_id/sections/:id/edit",
         component: () => import("src/pages/Section/Form.vue"),
+      },
+      {
+        path: "users",
+        component: () => import("src/pages/User/Index.vue"),
+        meta: {
+          auth: true,
+          authorize: [Role.Teacher],
+        },
+      },
+      {
+        path: "users/create",
+        component: () => import("src/pages/User/Form.vue"),
+        meta: {
+          auth: true,
+          authorize: [Role.Teacher],
+        },
+      },
+      {
+        path: "users/:id/edit",
+        component: () => import("src/pages/User/Form.vue"),
+        meta: {
+          auth: true,
+          authorize: [Role.Teacher],
+        },
+      },
+      {
+        path: "notifications",
+        component: () => import("src/pages/Notification/Index.vue"),
+        meta: {
+          auth: true,
+        },
       },
     ],
     meta: {

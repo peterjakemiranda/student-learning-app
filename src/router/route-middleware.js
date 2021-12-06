@@ -20,7 +20,6 @@ const beforeEach = (to, from, next) => {
         path: "/login",
       });
     }
-    console.log(to.meta);
     const { authorize } = to.meta;
     // check if route is restricted by role
     if (authorize && !authorize.includes(localStorage.getItem("role"))) {

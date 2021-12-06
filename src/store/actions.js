@@ -151,3 +151,37 @@ export const updateQuiz = ({ commit }, payload) => {
 export const fetchAllQuizQuestions = ({ commit }, payload) => {
   commit(types.FETCH_ALL_QUIZ_QUESTIONS, payload);
 };
+
+// Users
+export const setCurrentUser = ({ commit }, user) => {
+  commit(types.CURRENT_USER, user);
+};
+
+export const fetchUsers = ({ commit }, { users, pagination }) => {
+  commit(types.FETCH_USERS, { users, pagination });
+};
+
+export const fetchAllUsers = ({ commit }, users) => {
+  commit(types.FETCH_ALL_USERS, users);
+};
+
+export const resetUsers = ({ commit }) => {
+  commit(types.RESET_USERS);
+};
+
+export const setUserQuery = ({ commit }, { page, limit, search }) => {
+  commit(types.USER_QUERY, { page, limit, search });
+};
+
+// Notifications
+export const fetchNotifications = ({ commit }, { notifications, pagination }) => {
+  commit(types.FETCH_NOTIFICATIONS, { notifications, pagination });
+};
+
+export const setNotificationQuery = ({ commit }, { page, limit, search }) => {
+  commit(types.NOTIFICATION_QUERY, { page, limit, search });
+};
+
+export const setNotificationCount = ({ commit }, count) => {
+  commit(types.NOTIFICATION_COUNT, count);
+};

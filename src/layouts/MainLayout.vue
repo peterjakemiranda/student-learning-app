@@ -1,7 +1,7 @@
 <template>
   <q-layout view="lHh Lpr lff">
     <q-header class="q-pb-sm">
-      <q-img class="absolute-top" :src="bgImage" style="height: 108px" />
+      <!-- <q-img class="absolute-top" :src="bgImage" style="height: 108px" /> -->
       <q-toolbar>
         <q-btn
           flat
@@ -12,7 +12,11 @@
           @click="toggleLeftDrawer"
         />
         <q-space></q-space>
-        <q-btn flat round dense icon="search" to="/search" />
+        <q-btn dense round flat icon="notifications" to="/notifications">
+          <q-badge color="red" floating transparent v-if="notificationCount">
+            {{notificationCount}}
+          </q-badge>
+        </q-btn>
       </q-toolbar>
       <q-toolbar inset @click="goHome">
         <q-avatar>
@@ -48,6 +52,13 @@
             </q-item-section>
 
             <q-item-section> Courses </q-item-section>
+          </q-item>
+          <q-item to="/users" v-ripple exact v-if="isTeacher">
+            <q-item-section avatar>
+              <q-icon name="people" />
+            </q-item-section>
+
+            <q-item-section> Users </q-item-section>
           </q-item>
           <q-item to="/account" v-ripple exact>
             <q-item-section avatar>
@@ -105,6 +116,7 @@ import logoImage from "../assets/sdssu_logo.png";
 import studentImage from "../assets/student.png";
 import authService from "./../services/auth";
 import accountService from "./../services/account";
+import notificationService from "./../services/notification";
 
 export default defineComponent({
   name: "MainLayout",
@@ -121,10 +133,12 @@ export default defineComponent({
   components: {},
   mounted() {
     accountService.find().then(() => {});
+    notificationService.count().then(() => {});
   },
   computed: {
     ...mapGetters({
       account: "account",
+      notificationCount: "notificationCount",
     }),
     isTeacher() {
       return ["admin","teacher"].includes(window.localStorage.getItem("role"));

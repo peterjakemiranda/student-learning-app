@@ -7,38 +7,24 @@
       class="q-gutter-md"
       style="max-width: 800px"
     >
-      <q-input filled v-model="title" label="Title" />
-      <q-input filled v-model="course_code" label="Course Code" />
-      <q-input filled v-model="period" label="Period" />
-
-      <q-editor
-        :toolbar="[
-          ['left', 'center', 'right', 'justify', 'bold', 'italic', 'underline', 'hr', 'link', 'quote', 'unordered', 'ordered', 'outdent', 'indent'],
-          [
-            {
-              label: $q.lang.editor.formatting,
-              icon: $q.iconSet.editor.formatting,
-              list: 'no-icons',
-              options: [
-                'p',
-                'h1',
-                'h2',
-                'h3',
-                'h4',
-                'h5',
-                'h6',
-                'code'
-              ]
-            },
-          ],
-          ['undo', 'redo'],
-          ['viewsource']
-        ]"
+      <q-input filled v-model="title" label="Title" 
+        lazy-rules
+        :rules="[(val) => (val && val.length > 0) || 'Title is required']"
+      />
+      <q-input filled v-model="course_code" label="Course Code" 
+        lazy-rules
+        :rules="[(val) => (val && val.length > 0) || 'Course code is required']"
+      />
+      <q-input filled v-model="period" label="Period" 
+        lazy-rules
+        :rules="[(val) => (val && val.length > 0) || 'Period is required']"
+      />
+      <q-input filled v-model="virtual_class_link" label="Virtual Class Link" />
+      <q-input
         v-model="description"
         filled
-        label="Content *"
-        lazy-rules
-        :rules="[(val) => (val && val.length > 0) || 'Content is required']"
+        label="Description"
+        type="textarea"
       />
 
       <div class="q-gutter-lg q-pa-lg">
@@ -56,7 +42,6 @@
 <script>
 import { defineComponent } from "vue";
 import courseService from "../../services/course";
-import sectionService from "../../services/activity";
 import { mapGetters, mapMutations } from "vuex";
 import store from "../../store";
 
@@ -68,82 +53,72 @@ export default defineComponent({
       title: "",
       course_code: "",
       period: "",
+      virtual_class_link: "",
       description: "",
     };
   },
   computed: {
     ...mapGetters({
-      courses: "allCourses",
+      course: "currentCourse",
       sections: "allCourses",
     }),
-    courseOptions() {
-      return this.courses.map((c) => ({ label: c.title, value: c.id }));
-    },
   },
   mounted() {
-    if (!this.courses.length) {
+    this.loading = true;
+    if (this.$route.params.id) {
       courseService
-        .all()
+        .show(this.$route.params.id)
         .then((data) => {
+          store.dispatch("setCurrentCourse", data);
           this.loading = false;
-          this.setCurrentCourse();
         })
-        .catch((errors) => {
+        .catch((err) => {
           this.loading = false;
         });
-    } else {
-      this.setCurrentCourse();
     }
   },
   methods: {
     onSubmit() {
-      this.id ? this.update() : this.save();
-    },
-    save() {
-      courseService
-        .store({
+      const params = {
           title: this.title,
           course_code: this.course_code,
           period: this.period,
           description: this.description,
-        })
-        .then((data) => {
+          virtual_class_link: this.virtual_class_link,
+        };
+      const resource = this.id ? courseService.update(this.id, params) : courseService.store(params);
+      Promise.all([resource])
+      .then((data) => {
           this.loading = false;
-          this.$router.push(
-            `courses`
-          );
+          this.$q.dialog({
+            message: this.id ? `Successfully updated course ${this.course.title}.` : `Successfully created course!`,
+          }).onOk(() => {
+            this.id = null;
+            this.title = null;
+            this.course_code = null;
+            this.period = null;
+            this.description = null;
+            this.$router.push('/courses');
+          });
         })
         .catch((errors) => {
           this.loading = false;
         });
     },
-    update() {
-      courseService
-        .update(this.id, {
-          title: this.title,
-          course_code: this.course_code,
-          period: this.period,
-          description: this.description,
-        })
-        .then((data) => {
-          this.loading = false;
-          this.$router.push(
-            `/courses`
-          );
-        })
-        .catch((errors) => {
-          this.loading = false;
-        });
-    },
-    setCurrentCourse() {
-      this.course = this.courseOptions.find(
-        (o) => +o.value === +this.$route.params.course_id
-      );
-    },
-    onReset() {},
+    setValues(course) {
+      this.id = course.id;
+      this.title = course.title;
+      this.course_code = course.course_code;
+      this.period = course.period;
+      this.description = course.description;
+    }
   },
   watch: {
-    courses(courses) {},
+    course(course) {
+      if (course) {
+        this.setValues(course);
+      }
+    },
   },
 });
 </script>

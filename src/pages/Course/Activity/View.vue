@@ -14,8 +14,11 @@
       </q-breadcrumbs>
     </q-page-sticky>
     <div class="text-h5 q-mb-lg q-pt-xl q-pb-xs">{{activity?.title}}</div>
+    <div caption>Points: {{activity?.points}}</div>
+    <div caption v-if="this.activity?.answers.length && isStudent">Score: {{ this.activity?.answers[0].score || 'Ungraded'}}</div>
+
     <div class="text-center" v-if="loading">
-      <q-spinner-bars
+      <q-spinner-hourglass
         color="primary"
         size="2em"
       />
@@ -23,16 +26,18 @@
     <div v-else>
       <div class="q-pa-sm q-gutter-sm" style="height: 600px;">
         <q-pdfviewer
+          v-if="activity?.file"
           type="html5"
-          src="http://learning-api.local/storage/uploads/files/1bc24ccc-6279-43e0-af83-fc10f24964bd.pdf"
+          :src="activityFilePath"
         />
+        <div class="text-subtitle text-center" v-if="!activity?.file">Activity PDF not found.</div>
         <q-form
           v-if="isStudent && allowSubmission"
           @submit="onSubmit"
           class="q-gutter-md"
           style="max-width: 800px"
         >
-          <div class="q-gutter-sm q-pt-lg" style="max-width: 400px" v-if="activity?.submission_type === 'file_upload'">
+          <div class="q-gutter-sm q-pt-lg" style="max-width: 400px">
             <q-file
               v-model="file"
               label="Upload your answer"
@@ -50,7 +55,7 @@
               </template>
             </q-file>
           </div>
-          <div class="q-pa-sm q-pt-xs" v-else>
+          <!-- <div class="q-pa-sm q-pt-xs" v-else>
             <span class="label q-pt-md q-pb-sm">Write your Answer *</span>
             <q-editor
               v-model="content"
@@ -58,17 +63,17 @@
               lazy-rules
               :rules="[(val) => (val && val.length > 0) || 'Content is required']"
             />
-          </div>
+          </div> -->
           <div class="q-gutter-lg q-pa-lg row justify-center">
             <q-btn label="Submit Answer" type="submit" color="primary" />
             <q-btn :to="`/courses/${course?.id}/activities`" label="Back" type="submit" color="secondary" />
           </div>
         </q-form>
         <div v-else>
-          <div class="row justify-center" v-if="isStudent">
-            <span class="label q-pa-lg q-text-left">Answer Submitted At: {{ formatDate(activity?.updated_at)}}</span>
+          <div class="text-center" v-if="isStudent">
+            <span class="label q-pa-sm q-text-left block" v-if="this.activity?.answers.length">Answer Submitted At: {{ this.activity?.answers[0].submitted_date_formatted}}</span>
           </div>
-          <grading :course="course" :activity="activity"/>
+          <grading v-if="isTeacher" :course="course" :activity="activity"/>
           <!-- <q-btn label="Update Answer" type="submit" color="primary" /> -->
         </div>
       </div>
@@ -108,6 +113,9 @@ export default defineComponent({
     }),
     allowSubmission() {
       return !this.activity?.answers.length || this.resubmit === 1;
+    },
+    activityFilePath() {
+      return `${process.env.API}/${this.activity?.file}`;
     }
   },
   mounted() {

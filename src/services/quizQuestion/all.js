@@ -8,13 +8,13 @@ const success = ({ data }, resolve) => {
 
 const failed = (error, reject) => reject(error);
 
-export default (quiz_id = null) =>
+export default (quiz_id, student_id = null) =>
   new Promise((resolve, reject) => {
     axios
       .get(
-        quiz_id === null
-          ? "/api/quiz_questions"
-          : `/api/quiz_questions?quiz_id=${quiz_id}`
+        student_id === null
+          ? `/api/quiz_questions?quiz_id=${quiz_id}`
+          : `/api/quiz_questions?quiz_id=${quiz_id}&student_id=${student_id}`
       )
       .then((response) => {
         success(response, resolve);

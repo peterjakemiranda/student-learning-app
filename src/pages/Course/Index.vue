@@ -51,7 +51,7 @@
               round
               size="12px"
               icon="delete"
-              @click.prevent="remove(section)"
+              @click.prevent="remove(course)"
             >
               <q-tooltip anchor="top middle" self="bottom middle">
                 Delete

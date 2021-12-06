@@ -68,3 +68,14 @@ export const allQuizzes = (state) => state.quiz.all;
 export const quizSearchResults = (state) => state. quiz.searchResults;
 export const quizQuery = (state) => state. quiz.query;
 export const allQuizQuestions = (state) => state.quiz.questions;
+
+// Users
+export const users = (state) => state.user.items;
+export const allUsers = (state) => state.user.all;
+export const userQuery = (state) => state.user.query;
+export const currentUser = (state) => state.user.current;
+
+export const notifications = (state) => state.notification.items;
+export const notificationPagination = (state) => state.notification.pagination;
+export const notificationQuery = (state) => state.notification.query;
+export const notificationCount = (state) => state.notification.count;

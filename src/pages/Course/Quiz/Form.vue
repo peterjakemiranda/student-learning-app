@@ -15,7 +15,7 @@
     </q-page-sticky>
     <div class="text-h5 q-mb-lg q-pt-xl q-pb-xs">{{ id ? "Update" : "Create" }} Quiz</div>
     <div class="text-center" v-if="loading">
-      <q-spinner-bars
+      <q-spinner-hourglass
         color="primary"
         size="2em"
       />
@@ -32,7 +32,7 @@
             :rules="[(val) => (val && val.length > 0) || 'Please input title']"/>
           <q-input filled v-model="points" label="Points"
             lazy-rules
-            :rules="[(val) => (val && val.length > 0) || 'Please input score']"/>
+            :rules="[(val) => (val && val > 0) || 'Please input score']"/>
         </div>
         <div class="q-pa-sm q-pt-xs">
           <span class="label q-pt-md q-pb-sm">Instructions:</span>
@@ -85,18 +85,28 @@ export default defineComponent({
     }),
   },
   mounted() {
+    const resources = this.$route.params.quiz_id ? [quizService.show(this.$route.params.quiz_id)] : [];
     if (!this.course) {
-      this.loading = true;
-      courseService
-        .show(this.$route.params.id)
-        .then((data) => {
-          store.dispatch("setCurrentCourse", data);
-          this.loading = false;
-        })
-        .catch((err) => {
-          this.loading = false;
-        });
+      resources.push(courseService.show(this.$route.params.id));
     }
+    this.loading = true;
+    Promise.all(resources)
+    .then((data) => {
+      if (this.$route.params.quiz_id && data[0]) {
+        const quiz = data[0];
+        this.id = quiz.id;
+        this.title = quiz.title;
+        this.points = quiz.points;
+        this.body = quiz.body;
+      }
+      if (!this.course) {
+        store.dispatch("setCurrentCourse", data[1]);
+      }
+      this.loading = false;
+    })
+    .catch((err) => {
+      this.loading = false;
+    });
   },
   methods: {
     
@@ -112,7 +122,7 @@ export default defineComponent({
         .then((data) => {
           this.loading = false;
           this.$router.push(
-            `/courses/${this.course.id}/quizzes`
+            this.id ? `/courses/${this.course.id}/quizzes` : `/courses/${this.course.id}/quizzes/${data[0].id}`
           );
         })
         .catch((errors) => {

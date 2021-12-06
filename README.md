@@ -1,6 +1,6 @@
-# Handbook App (handbook-app)
+# Student Learning App (handbook-app)
 
-SDSSU Handbook App
+SDSSU Student Learning App
 
 ## Install the dependencies
 ```bash

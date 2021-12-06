@@ -15,7 +15,7 @@
     </q-page-sticky>
     <div class="text-h5 q-mb-lg q-pt-xl q-pb-xs">Add New Student</div>
     <div class="text-center" v-if="loading">
-      <q-spinner-bars
+      <q-spinner-hourglass
         color="primary"
         size="2em"
       />

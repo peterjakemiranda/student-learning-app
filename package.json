@@ -1,8 +1,8 @@
 {
   "name": "handbook-app",
   "version": "0.0.1",
-  "description": "SDSSU Handbook App",
-  "productName": "Handbook App",
+  "description": "SDSSU Student Learning App",
+  "productName": "Student Learning App",
   "author": "peter",
   "private": true,
   "scripts": {

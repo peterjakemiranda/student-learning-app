@@ -15,7 +15,7 @@
     </q-page-sticky>
     <div class="text-h5 q-mb-lg q-pt-xl q-pb-xs">{{ id ? "Update" : "Create" }} Activity</div>
     <div class="text-center" v-if="loading">
-      <q-spinner-bars
+      <q-spinner-hourglass
         color="primary"
         size="2em"
       />
@@ -32,33 +32,7 @@
         :rules="[(val) => (val && val.length > 0) || 'Please input title']"/>
         <q-input filled v-model="points" label="Points" 
         lazy-rules
-        :rules="[(val) => (val && val.length > 0) || 'Please input score']"/>
-        <span class="label q-mt-lg block">Display Date:</span>
-        <q-input filled v-model="display_date">
-          <template v-slot:prepend>
-            <q-icon name="event" class="cursor-pointer">
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                <q-date v-model="display_date" mask="YYYY-MM-DD HH:mm">
-                  <div class="row items-center justify-end">
-                    <q-btn v-close-popup label="Close" color="primary" flat />
-                  </div>
-                </q-date>
-              </q-popup-proxy>
-            </q-icon>
-          </template>
-
-          <template v-slot:append>
-            <q-icon name="access_time" class="cursor-pointer">
-              <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                <q-time v-model="display_date" mask="YYYY-MM-DD HH:mm" format24h>
-                  <div class="row items-center justify-end">
-                    <q-btn v-close-popup label="Close" color="primary" flat />
-                  </div>
-                </q-time>
-              </q-popup-proxy>
-            </q-icon>
-          </template>
-        </q-input>
+        :rules="[(val) => (val && val > 0) || 'Please input points']"/>
         <span class="label q-mt-lg block">Due Date:</span>
         <q-input filled v-model="due_date">
           <template v-slot:prepend>
@@ -87,7 +61,7 @@
         </q-input>
         <q-file
           v-model="file"
-          label="Activity File"
+          label="Activity PDF"
           square
           flat
           outlined
@@ -97,17 +71,19 @@
           max-files="1"
           max-file-size="5120000"
           @rejected="onRejected"
+          lazy-rules
+          :rules="[(val) => (val || id) || 'Please provide the activity pdf.']"
         >
           <template v-slot:prepend>
             <q-icon name="attach_file" />
           </template>
         </q-file>
       </div>
-        <div class="q-gutter-sm q-mt-md">
+        <!-- <div class="q-gutter-sm q-mt-md">
           <span class="label">Submission type:</span>
           <q-radio v-model="submission_type" val="file_upload" label="File Upload" />
           <q-radio v-model="submission_type" val="text_entry" label="Text Entry" />
-        </div>
+        </div> -->
         <div class="q-pa-sm q-pt-xs">
           <span class="label q-pt-md q-pb-sm">Instructions:</span>
           <q-editor
@@ -118,9 +94,9 @@
             :rules="[(val) => (val && val.length > 0) || 'Content is required']"
           />
         </div>
+        <q-toggle v-model="draft" label="Is Draft?" />
         <div class="q-gutter-lg q-pa-lg">
-          <q-btn label="Save" type="submit" color="primary" />
-          <q-btn label="Save & Publish" type="submit" color="primary" />
+          <q-btn label="Save" type="submit" color="primary" :loading="loading"/>
           <q-btn
             label="Back"
             type="submit"
@@ -149,10 +125,10 @@ export default defineComponent({
       title: "",
       points: "",
       due_date: "",
-      display_date: "",
       submission_type: "file_upload",
       body: "",
       file: null,
+      draft: false,
     };
   },
   computed: {
@@ -162,18 +138,31 @@ export default defineComponent({
     }),
   },
   mounted() {
+    const resources = this.$route.params.activity_id ? [activityService.show(this.$route.params.activity_id)] : [];
     if (!this.course) {
-      this.loading = true;
-      courseService
-        .show(this.$route.params.id)
+      resources.push(courseService.show(this.$route.params.id));
+    }
+    this.loading = true;
+    Promise.all(resources)
         .then((data) => {
-          store.dispatch("setCurrentCourse", data);
+          if (this.$route.params.activity_id && data[0]) {
+            const quiz = data[0];
+            this.id = quiz.id;
+            this.title = quiz.title;
+            this.points = quiz.points;
+            this.due_date = quiz.due_date;
+            this.submission_type = quiz.submission_type;
+            this.body = quiz.body;
+            this.draft = quiz.draft ? true : false;
+          }
+          if (!this.course) {
+            store.dispatch("setCurrentCourse", data[1]);
+          }
           this.loading = false;
         })
         .catch((err) => {
           this.loading = false;
         });
-    }
   },
   methods: {
     
@@ -187,6 +176,7 @@ export default defineComponent({
       formData.append('submission_type', this.submission_type);
       formData.append('body', this.body);
       formData.append('course_id', this.course.id);
+      formData.append('draft', this.draft ? 1 : 0);
 
       const resource = this.id ? activityService.update(this.id, formData) : activityService.store(formData);
       Promise.all([resource])

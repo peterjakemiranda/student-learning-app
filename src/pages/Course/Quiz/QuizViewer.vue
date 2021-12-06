@@ -4,25 +4,27 @@
     @submit="onSubmit"
     class="q-gutter-md"
     style="max-width: 800px"
+    v-if="questions.length && answers.length"
       >
-      <div v-for="question in questions" :key="question.id" class="q-pb-md">
+      <div v-for="(question, index) in questions" :key="question.id" class="q-pb-md">
         <q-item-label class="q-py-sm">{{ question.question }}</q-item-label>
         <template v-if="question.type === 'text'">
-          <q-input filled v-model="answers[question.id]" stack-label/>
+          <q-input :disabled="isTeacher" filled v-model="answers[index].answer" stack-label/>
         </template>
         <template v-if="question.type === 'multiple_choice'">
           <div class="q-gutter-sm">
-            <q-radio v-for="option in getOptions(question)" :key="option.id" v-model="answers[question.id]" :val="option" :label="option" />
+            <q-radio :disabled="isTeacher" v-for="option in getOptions(question)" :key="option.id" v-model="answers[index].answer" :val="option" :label="option" />
           </div>
         </template>
         <template v-if="question.type === 'multiple_answers'">
           <div class="q-gutter-sm">
-            <q-checkbox v-for="option in getOptions(question)" :key="option.id" v-model="answers[question.id]" :val="option" :label="option" />
+            <q-checkbox :disabled="isTeacher" v-for="option in getOptions(question)" :key="option.id" v-model="answers[index].answer" :val="option" :label="option" />
           </div>
         </template>
         <template v-if="question.type === 'file_upload'">
           <q-file
-            v-model="answers[question.id]"
+            :disabled="isTeacher"
+            v-model="answers[index].answer"
             square
             flat
             outlined
@@ -36,12 +38,29 @@
               <q-icon name="attach_file" />
             </template>
           </q-file>
+          <div v-if="isTeacher && studentId && question.answer">
+            <q-img
+              v-if="isImage(answerFilePath(question.answer))"
+              :src="answerFilePath(question.answer)"
+              spinner-color="red"
+              style="height: 470px;"
+              :fit="'contain'"
+            />
+            <q-pdfviewer
+              v-else
+              style="height: 470px;"
+              type="html5"
+              :src="answerFilePath(question.answer)"
+            />
+          </div>
         </template>
+        <div class="text-subtitle1 q-ma-sm q-pa-sm bg-blue-2 text-gray-500" v-if="isTeacher && studentId">Correct Answer: {{question.correct_answer}}</div>
         </div>
-        <div class="q-gutter-lg q-pa-lg">
-          <q-btn :disable="isTeacher" label="Submit Answer" type="submit" color="primary" />
+        <div class="q-gutter-lg q-pa-lg row justify-center">
+          <q-btn v-if="!isTeacher" label="Submit Answer" type="submit" color="primary" />
         </div>
       </q-form>
+      <div class="text-subtitle text-center" v-if="!questions.length">No questions added for this quiz.</div>
   </div>
 </template>
 
@@ -49,6 +68,7 @@
 import { defineComponent } from "vue";
 import { mapGetters, mapMutations } from "vuex";
 import quizQuestionService from "../../../services/quizQuestion";
+import quizService from "../../../services/quiz";
 
 export default defineComponent({
   name: "QuestionViewer",
@@ -59,9 +79,17 @@ export default defineComponent({
     };
   },
   props: {
+    course: {
+      type: Object,
+      default: () => {}
+    },
     quiz: {
       type: Object,
       default: () => {}
+    },
+    studentId: {
+      type: Number,
+      default: null,
     },
   },
   computed: {
@@ -75,27 +103,20 @@ export default defineComponent({
   },
   methods: {
     onSubmit() {
+      const formData = new FormData();
+      this.answers.forEach(a => {
+        formData.append(`answers[${a.id}]`, a.answer);
+      });
       this.loading = true;
-      const params = {
-          quiz_id: this.quiz.id, 
-          question: this.form.question, 
-          type: this.form.type, 
-          options: this.form.options,
-          correct_answer: this.form.correct_answer,
-        };
-      const resource = this.form.id ? quizQuestionService.update(this.form.id, params) : quizQuestionService.store(params);
-      Promise.all([resource])
+      quizService.submitAnswer(this.quiz.id, formData)
         .then((data) => {
           this.loading = false;
-          this.dialog = false;
-          this.form = {
-            id: null,
-            question: '',
-            type: 'text',
-            options: null,
-            correct_answer: '',
-          };
-          this.fetchQuestions();
+          this.$q.dialog({
+            title: "Success!",
+            message: "Your answers has been successfully submitted.",
+          }).onOk(() => {
+            this.$router.push(`/courses/${this.course?.id}/quizzes`);
+          });
         })
         .catch((err) => {
           this.loading = false;
@@ -104,7 +125,8 @@ export default defineComponent({
     fetchQuestions()
     {
       this.loading = true;
-      quizQuestionService.all(this.quiz?.id)
+      const studentId = this.studentId || null;
+      quizQuestionService.all(this.quiz?.id, studentId)
       .then((data) => {
         this.loading = false;
       })
@@ -114,15 +136,27 @@ export default defineComponent({
     },
     getOptions(question) {
       return question.options.split("\n");
+    },
+    getAnswer(questionId) {
+      return this.answers.find(a => a.id == questionId)['answer'];
+    },
+    answerFilePath(answer) {
+      return `${process.env.API}/${answer.file}`;
+    },
+    isImage(url) {
+      return(url.match(/\.(jpeg|jpg|gif|png)$/) != null);
     }
   },
   watch: {
     questions(questions) {
+      this.answers = [];
       questions.forEach((q) => {
         if (q.type === 'multiple_answers') {
-          this.answers[q.id] = [];
+          this.answers.push({id: q.id, answer: q.answer ? q.answer.content.split(',') : []});
+        } else if (q.type != 'file_upload') {
+          this.answers.push({id: q.id, answer: q.answer ? q.answer.content : ''});
         } else {
-          this.answers[q.id] = null;
+          this.answers.push({id: q.id, answer: null});
         }
       });
     }

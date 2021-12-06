@@ -4,7 +4,7 @@
       <div class="text-h5 q-pa-md">My Courses</div>
     </q-page-sticky>
       <div class="text-center q-pt-xl" v-if="coursesLoading">
-        <q-spinner-bars
+        <q-spinner-hourglass
           color="primary"
           size="2em"
         />
@@ -12,18 +12,19 @@
       <div style="padding-top: 68px" v-else>
         <q-card 
           class="course-card q-mb-md" 
-          flat 
           bordered
+          flat
           @click="gotoCourse(course)"
           v-for="course in courses"
           :key="course.id"
           clickable
-          ripple>
+          ripple
+          >
           <q-card-section horizontal>
             <q-card-section class="q-pt-xs">
               <div class="text-overline">{{course.course_code}}</div>
-              <div class="text-h5 q-mt-sm q-mb-xs">{{course.title}}</div>
-              <div class="text-caption text-grey">
+              <div class="text-h5 text-primary q-mt-sm q-mb-xs">{{course.title}}</div>
+              <div class="text-caption text-grey-100">
                 {{course.description}}
               </div>
             </q-card-section>
@@ -103,7 +104,6 @@ export default defineComponent({
         });
     },
     gotoCourse(course) {
-      console.log(course);
       store.dispatch("setCurrentCourse", course);
       this.$router.push(`/courses/${course.id}`);
     }

@@ -11,6 +11,8 @@ import bookmark from "./modules/bookmark";
 import student from "./modules/student";
 import announcement from "./modules/announcement";
 import quiz from "./modules/quiz";
+import user from "./modules/user";
+import notification from "./modules/notification";
 
 const debug = process.env.NODE_ENV !== "production";
 
@@ -36,6 +38,8 @@ const store = createStore({
     student,
     announcement,
     quiz,
+    user,
+    notification,
   },
 
   /**

@@ -1,5 +1,6 @@
 <template>
   <div class="q-pa-none">
+    <div class="text-subtitle1 q-pa-xs">Points: {{quiz?.points}}</div>
     <q-list bordered>
       <q-item class="q-ma-none q-py-none">
         <q-item-section>
@@ -17,7 +18,7 @@
         </q-item-section>
     
         <q-item-section side top>
-          <span v-if="student?.quiz_answers && student?.quiz_answers[0]?.score">{{ student.quiz_answers[0].score }}</span>
+          <span v-if="student?.quiz_answers && student?.quiz_score?.score">{{ student?.quiz_score.score }}</span>
           <span v-else-if="student?.quiz_answers && student?.quiz_answers.length">Ungraded</span>
           <span v-else>No Answer</span>
         </q-item-section>
@@ -43,10 +44,11 @@
       <q-card-section>
         <div class="text-subtitle">Quiz: <b>{{ quiz?.title }}</b></div>
         <div class="text-subtitle">Student: <b>{{ student?.fullname }}</b></div>
+        <div class="text-subtitle">Points: <b>{{activity?.points}}</b></div>
       </q-card-section>
 
       <q-card-section class="q-pt-md">
-        <quiz-viewer :quiz="quiz"/>
+        <quiz-viewer :quiz="quiz" :course="course" :studentId="this.student.id"/>
         <q-form
           @submit="onSubmitScore"
           class="q-gutter-md q-pt-md"
@@ -77,6 +79,7 @@ import { defineComponent } from "vue";
 import { mapGetters, mapMutations } from "vuex";
 import studentService from "../../../services/student";
 import quizService from "../../../services/quiz";
+import QuizViewer from './QuizViewer.vue';
 
 export default defineComponent({
   name: "Grading",
@@ -87,6 +90,9 @@ export default defineComponent({
       student: null,
       score: null,
     };
+  },
+  components: {
+    QuizViewer,
   },
   props: {
     quiz: {
@@ -117,14 +123,14 @@ export default defineComponent({
         })
         return;
       }
-      if (this.student?.quiz_answers.length) {
-        this.score = this.student?.quiz_answers[0].score;
+      if (this.student?.quiz_score) {
+        this.score = this.student?.quiz_score.score;
       }
       this.dialog = true;
     },
     onSubmitScore() {
       this.loading = true;
-      quizService.submitScore(this.quiz?.id, this.student.quiz_answers[0].id, {score: this.score})
+      quizService.submitScore(this.quiz?.id, {score: this.score, student_id: this.student.id})
         .then((data) => {
           this.dialog = false;
           this.student = null;

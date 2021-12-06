@@ -2,7 +2,7 @@
   <div class="q-pa-sm">
     <header-menu/>
     <div class="text-center" v-if="loading">
-      <q-spinner-bars
+      <q-spinner-hourglass
         color="primary"
         size="2em"
       />
@@ -16,19 +16,20 @@
         label="Create Announcement"
         class="q-mb-md"
       />
-      <q-list>
-          <q-item v-for="announcement in announcements" :key="announcement.id">
-            <q-item-section>
-              <q-item-label v-if="announcement.title">{{ announcement.title }}</q-item-label>
-              <q-item-label caption class="ellipsis-2-lines">{{ announcement.body }}</q-item-label>
-            </q-item-section>
+      <q-list v-if="announcements.length">
+        <q-item v-for="announcement in announcements" :key="announcement.id">
+          <q-item-section>
+            <q-item-label v-if="announcement.title">{{ announcement.title }}</q-item-label>
+            <q-item-label caption class="ellipsis-2-lines">{{ announcement.body }}</q-item-label>
+          </q-item-section>
 
-            <q-item-section side top>
-              <q-item-label caption>{{ announcement.created_date_formatted}}</q-item-label>
-            </q-item-section>
-          </q-item>
-          <q-separator spaced inset />
-        </q-list>
+          <q-item-section side top>
+            <q-item-label caption>{{ announcement.created_date_formatted}}</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-separator spaced inset />
+      </q-list>
+      <div class="text-subtitle text-center" v-else>No annoucement found.</div>
     </div>
   </div>
 </template>
@@ -67,7 +68,6 @@ export default defineComponent({
     this.loading = true;
     Promise.all(resources)
         .then((data) => {
-          console.log(this.course);
           if (!this.course){
             store.dispatch("setCurrentCourse", data[1]);
           }

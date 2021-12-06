@@ -14,8 +14,24 @@
       </q-breadcrumbs>
     </q-page-sticky>
     <div class="text-h5 q-mb-sm q-pt-xl q-pb-xs">{{quiz?.title}}</div>
+    <q-btn
+        v-if="course && isTeacher"
+        :to="`/courses/${course.id}/quizzes/${quiz?.id}/edit`"
+        color="primary"
+        icon="edit"
+        label="Edit"
+        class="q-mb-md"
+      />
+    <q-btn
+        v-if="course && isTeacher"
+        @click="deleteQuiz(quiz)"
+        color="red"
+        icon="delete"
+        label="Delete"
+        class="q-mb-md q-ml-sm"
+      />
     <div class="text-center" v-if="loading">
-      <q-spinner-bars
+      <q-spinner-hourglass
         color="primary"
         size="2em"
       />
@@ -39,50 +55,9 @@
 
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="view">
-            <q-form
-              v-if="isStudent && allowSubmission"
-              @submit="onSubmit"
-              class="q-gutter-md"
-              style="max-width: 800px"
-            >
-              <div class="q-gutter-sm q-pt-lg" style="max-width: 400px" v-if="quiz?.submission_type === 'file_upload'">
-                <q-file
-                  v-model="file"
-                  label="Upload your answer"
-                  square
-                  flat
-                  outlined
-                  use-chips
-                  clearable
-                  accept=".pdf,.jpg,.png,.gif"
-                  max-files="1"
-                  max-file-size="5120000"
-                >
-                  <template v-slot:prepend>
-                    <q-icon name="attach_file" />
-                  </template>
-                </q-file>
-              </div>
-              <div class="q-pa-sm q-pt-xs" v-else>
-                <span class="label q-pt-md q-pb-sm">Write your Answer *</span>
-                <q-editor
-                  v-model="content"
-                  filled
-                  lazy-rules
-                  :rules="[(val) => (val && val.length > 0) || 'Content is required']"
-                />
-              </div>
-              <div class="q-gutter-lg q-pa-lg row justify-center">
-                <q-btn label="Submit Answer" type="submit" color="primary" />
-                <q-btn :to="`/courses/${course?.id}/quizzes`" label="Back" type="submit" color="secondary" />
-              </div>
-            </q-form>
-            <div v-else>
-              <quiz-viewer :quiz="quiz"/>
-              <div class="row justify-center" v-if="isStudent">
-                <span class="label q-pa-lg q-text-left">Answer Submitted At: {{ formatDate(quiz?.updated_at)}}</span>
-              </div>
-              <!-- <q-btn label="Update Answer" type="submit" color="primary" /> -->
+            <quiz-viewer :quiz="quiz" :course="course"/>
+            <div class="row justify-center" v-if="isStudent">
+              <span class="label q-pa-lg q-text-left">Answer Submitted At: {{ formatDate(quiz?.updated_at)}}</span>
             </div>
           </q-tab-panel>
 
@@ -172,6 +147,26 @@ export default defineComponent({
     },
     formatDate(timestamp) {
       return date.formatDate(timestamp, 'YYYY-MM-DD HH:mm:ss');
+    },
+    deleteQuiz(quiz) {
+      const self = this;
+      this.$q
+        .dialog({
+          title: "Confirm",
+          message: "Are you sure to delete this quiz?",
+          cancel: true,
+          persistent: true,
+        })
+        .onOk(() => {
+            quizService.destroy(this.$route.params.quiz_id)
+            .then((data) => {
+              self.$router.push(`/courses/${this.course?.id}/quizzes`);
+              self.loading = false;
+            })
+            .catch((err) => {
+              self.loading = false;
+            });
+        });
     }
   },
 });

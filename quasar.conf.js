@@ -69,7 +69,7 @@ module.exports = configure(function (ctx) {
       },
       env: {
         API: ctx.dev
-          ? "http://learning-api.local"
+          ? "https://cdb4-112-198-98-2.ngrok.io"
           : "http://sdssu-student-learning.com",
       },
     },
@@ -142,9 +142,9 @@ module.exports = configure(function (ctx) {
       },
 
       manifest: {
-        name: `Handbook App`,
-        short_name: `Handbook App`,
-        description: `SDSSU Handbook App`,
+        name: `Student Learning App`,
+        short_name: `Student Learning App`,
+        description: `SDSSU Student Learning App`,
         display: "standalone",
         orientation: "portrait",
         background_color: "#ffffff",

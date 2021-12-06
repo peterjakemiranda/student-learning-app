@@ -2,7 +2,7 @@
   <div class="q-pa-sm">
     <header-menu/>
     <div class="text-center" v-if="loading">
-      <q-spinner-bars
+      <q-spinner-hourglass
         color="primary"
         size="2em"
       />

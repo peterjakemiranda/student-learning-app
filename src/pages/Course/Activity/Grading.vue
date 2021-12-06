@@ -3,7 +3,7 @@
     <q-toolbar class="bg-primary text-white shadow-2">
       <q-toolbar-title>Grading</q-toolbar-title>
     </q-toolbar>
-
+    <div class="text-subtitle1 q-pa-sm">Points: {{activity?.points}}</div>
     <q-list bordered>
       <q-item class="q-my-xs">
         <q-item-section>
@@ -46,6 +46,7 @@
       <q-card-section>
         <div class="text-subtitle">Activity: <b>{{ activity?.title }}</b></div>
         <div class="text-subtitle">Student: <b>{{ student?.fullname }}</b></div>
+        <div class="text-subtitle">Points: <b>{{activity?.points}}</b></div>
       </q-card-section>
 
       <q-card-section class="q-pt-md">

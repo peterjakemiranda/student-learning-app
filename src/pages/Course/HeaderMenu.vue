@@ -16,13 +16,14 @@
     <div class="text-h5 q-mb-xs q-pt-xl q-pb-xs">{{ course?.title || 'Course' }}</div>
     <q-tabs
       dense
+      mobile-arrows
       v-if="course"
     >
       <q-route-tab :to="`/courses/${course.id}`" icon="home" label="Home" exact/>
       <q-route-tab :to="`/courses/${course.id}/activities`" icon="description" label="Activities" exact/>
       <q-route-tab v-if="isTeacher" :to="`/courses/${course.id}/students`" icon="people" label="Students" exact/>
-      <q-route-tab :to="`/courses/${course.id}/announcements`" icon="campaign" label="Announcements" exact/>
       <q-route-tab :to="`/courses/${course.id}/quizzes`" icon="quiz" label="Quizzes" exact/>
+      <q-route-tab :to="`/courses/${course.id}/announcements`" icon="campaign" label="Announcements" exact/>
     </q-tabs>
   </div>
 </template>

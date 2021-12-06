@@ -1,5 +1,7 @@
 import { axios } from "../../boot/axios";
+import notificationCount from "../notification/count";
 const success = (resolve, { data }) => {
+  notificationCount();
   resolve(data);
 };
 
@@ -22,6 +24,7 @@ export default (quizId, data) =>
         success(resolve, response);
       })
       .catch((error) => {
+        console.log(error);
         failed(error.response.data, reject);
       });
   });

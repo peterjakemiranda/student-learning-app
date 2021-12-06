@@ -2,7 +2,7 @@
   <div class="q-pa-sm">
     <header-menu/>
     <div class="text-center" v-if="loading">
-      <q-spinner-bars
+      <q-spinner-hourglass
         color="primary"
         size="2em"
       />
@@ -29,6 +29,9 @@
               <span v-else-if="quiz.stopped_date">Status: <span class="text-red">Inactive</span> <br> Stopped at: {{quiz.stopped_date_formatted}}</span>
               <span v-else>Status: {{`Not Started` }}</span>
             </q-item-label>
+            <q-item-label caption>
+              <span>Score: {{ quiz?.score.score || 'Ungraded' }} / {{quiz?.points}}</span>
+            </q-item-label>
           </q-item-section>
 
           <q-item-section side>
@@ -37,8 +40,8 @@
               <q-btn v-ripple v-if="!quiz.started" size="12px" color="primary" label="Start" @click="toggleStatus(quiz,1)" :loading="toggleLoading"/>
               <q-btn v-ripple v-else size="12px" color="red" label="Stop" @click="toggleStatus(quiz,0)" :loading="toggleLoading"/>
             </div>
-            <div class="row q-gutter-xs" v-else>
-              <q-btn v-ripple :to="`/courses/${course.id}/quizzes/${quiz?.id}`" color="primary" size="12px" label="Take" />
+            <div class="row q-gutter-xs" v-else-if="quiz.started">
+              <q-btn v-ripple :to="`/courses/${course.id}/quizzes/${quiz?.id}/take`" color="primary" size="12px" label="Take" />
             </div>
           </q-item-section>
         </q-item>
@@ -88,7 +91,6 @@ export default defineComponent({
     this.loading = true;
     Promise.all(resources)
         .then((data) => {
-          console.log(this.course);
           if (!this.course){
             store.dispatch("setCurrentCourse", data[1]);
           }

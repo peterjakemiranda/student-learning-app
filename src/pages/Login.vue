@@ -110,6 +110,7 @@
 <script>
 import { defineComponent } from "vue";
 import authService from "./../services/auth";
+import accountService from "./../services/account";
 import logoImage from "../assets/sdssu_logo.png";
 
 export default defineComponent({
@@ -130,6 +131,7 @@ export default defineComponent({
       authService
         .login({ email: this.email, password: this.password })
         .then(() => {
+          this.storePushNotificationToken();
           this.loading = false;
         })
         .catch((errors) => {
@@ -137,6 +139,20 @@ export default defineComponent({
           this.loading = false;
         });
     },
+    async storePushNotificationToken() {
+      try {
+        const fcmToken = await FCM.getToken();
+        accountService.storeToken({ token: fcmToken })
+          .then((data) => {
+            this.loading = false;
+          })
+          .catch((errors) => {
+            this.loading = false;
+          });
+      } catch (e) {
+        console.log(e);
+      }
+    }
   },
 });
 </script>
