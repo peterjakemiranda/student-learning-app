@@ -1,5 +1,5 @@
 {
-  "name": "handbook-app",
+  "name": "learning-app",
   "version": "0.0.1",
   "description": "SDSSU Student Learning App",
   "productName": "Student Learning App",
@@ -14,7 +14,8 @@
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
     "quasar": "^2.0.0",
-    "vuex": "^4.0.1"
+    "vuex": "^4.0.1",
+    "pdfjs-dist": "2.6.347"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.13.14",

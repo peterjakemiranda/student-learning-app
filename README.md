@@ -1,4 +1,4 @@
-# Student Learning App (handbook-app)
+# Student Learning App (learning-app)
 
 SDSSU Student Learning App
 

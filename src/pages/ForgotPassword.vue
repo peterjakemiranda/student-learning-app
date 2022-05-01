@@ -22,7 +22,7 @@
                 <q-img :src="logoImage" style="width: 72px"/>
               </q-avatar>
               <div class="text-h5 text-center q-mb-md text-weight-bold">
-                Student Handbook
+                Student Learning
               </div>
             </div>
             <div class="text-h6 q-px-lg q-pb-xs q-pt-lg">Password Recovery</div>

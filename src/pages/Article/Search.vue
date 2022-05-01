@@ -9,7 +9,7 @@
       <q-breadcrumbs
         class="text-grey bg-white full-width q-px-lg q-py-sm text-body1"
       >
-        <q-breadcrumbs-el to="/" icon="menu_book" label="My Handbook" />
+        <q-breadcrumbs-el to="/" icon="menu_book" label="My Learning" />
         <q-breadcrumbs-el icon="local_library" label="Search" />
       </q-breadcrumbs>
     </q-page-sticky>
@@ -33,7 +33,7 @@
           <q-icon name="search" />
         </template>
 
-        <template v-slot:hint> Search the entire handbook </template>
+        <template v-slot:hint> Search the entire learning </template>
       </q-input>
       <div class="text-center" v-if="loading">
         <q-spinner-hourglass

@@ -21,7 +21,7 @@ module.exports = configure(function (ctx) {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://v2.quasar.dev/quasar-cli/boot-files
-    boot: ["axios"],
+    boot: ["axios", "FCMPlugin"],
 
     // https://v2.quasar.dev/quasar-cli/quasar-conf-js#Property%3A-css
     css: ["app.scss"],
@@ -68,9 +68,8 @@ module.exports = configure(function (ctx) {
           .use(ESLintPlugin, [{ extensions: ["js", "vue"] }]);
       },
       env: {
-        API: ctx.dev
-          ? "https://cdb4-112-198-98-2.ngrok.io"
-          : "http://sdssu-student-learning.com",
+        API: "https://student-learning-api.herokuapp.com",
+        VUE_ENV: 'client',
       },
     },
 
@@ -207,7 +206,7 @@ module.exports = configure(function (ctx) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: "handbook-app",
+        appId: "learning-app",
       },
 
       // "chain" is a webpack-chain object https://github.com/neutrinojs/webpack-chain

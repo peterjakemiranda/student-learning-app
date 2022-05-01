@@ -9,7 +9,7 @@
       <q-breadcrumbs
         class="text-grey bg-white full-width q-px-lg q-py-sm text-body1"
       >
-        <q-breadcrumbs-el to="/" icon="menu_book" label="My Handbook" />
+        <q-breadcrumbs-el to="/" icon="menu_book" label="My Learning" />
         <q-breadcrumbs-el icon="local_library" label="Search" />
       </q-breadcrumbs>
     </q-page-sticky>

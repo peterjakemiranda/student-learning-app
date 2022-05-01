@@ -29,7 +29,7 @@
         <q-item-section side>
           <div class="row q-gutter-sm">
             <div v-if="!isTeacher">
-              <q-icon name="thumb_up" color="green" v-if="activity?.answers.length"/>
+              <q-icon name="thumb_up" color="green" v-if="activity?.answers?.length"/>
               <q-icon name="notifications_active" color="warning" v-else/>
             </div>
             <q-btn clickable dense v-ripple color="primary" :to="`/courses/${course.id}/activities/${activity?.id}`" label="View" />

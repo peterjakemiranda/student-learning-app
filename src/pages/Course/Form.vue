@@ -98,6 +98,7 @@ export default defineComponent({
             this.course_code = null;
             this.period = null;
             this.description = null;
+            this.virtual_class_link = null;
             this.$router.push('/courses');
           });
         })
@@ -110,6 +111,7 @@ export default defineComponent({
       this.title = course.title;
       this.course_code = course.course_code;
       this.period = course.period;
+      this.virtual_class_link = course.virtual_class_link;
       this.description = course.description;
     }
   },

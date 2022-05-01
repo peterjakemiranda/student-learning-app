@@ -14,9 +14,6 @@
       </q-breadcrumbs>
     </q-page-sticky>
     <div class="text-h5 q-mb-lg q-pt-xl q-pb-xs">{{activity?.title}}</div>
-    <div caption>Points: {{activity?.points}}</div>
-    <div caption v-if="this.activity?.answers.length && isStudent">Score: {{ this.activity?.answers[0].score || 'Ungraded'}}</div>
-
     <div class="text-center" v-if="loading">
       <q-spinner-hourglass
         color="primary"
@@ -24,13 +21,11 @@
       />
     </div>
     <div v-else>
-      <div class="q-pa-sm q-gutter-sm" style="height: 600px;">
-        <q-pdfviewer
-          v-if="activity?.file"
-          type="html5"
-          :src="activityFilePath"
-        />
+      <div class="q-pa-sm q-gutter-sm">
         <div class="text-subtitle text-center" v-if="!activity?.file">Activity PDF not found.</div>
+        <PdfViewer v-if="activity?.file" :src="activity?.file"/>
+        <div caption>Points: {{activity?.points}}</div>
+        <div caption v-if="this.activity?.answers && this.activity?.answers.length && isStudent">Score: {{ this.activity?.answers[0].score || 'Ungraded'}}</div>
         <q-form
           v-if="isStudent && allowSubmission"
           @submit="onSubmit"
@@ -89,6 +84,7 @@ import courseService from "../../../services/course";
 import activityService from "../../../services/activity";
 import { date } from 'quasar'
 import Grading from './Grading.vue';
+import PdfViewer from "../../../components/PdfViewer";
 
 export default defineComponent({
   name: "ActivityView",
@@ -98,11 +94,13 @@ export default defineComponent({
       activity: null,
       file: null,
       content: null,
+      pdfSrc: null,
       resubmit: 0,
     };
   },
   components: {
     Grading,
+    PdfViewer,
   },
   computed: {
     ...mapGetters({
@@ -114,9 +112,6 @@ export default defineComponent({
     allowSubmission() {
       return !this.activity?.answers.length || this.resubmit === 1;
     },
-    activityFilePath() {
-      return `${process.env.API}/${this.activity?.file}`;
-    }
   },
   mounted() {
     const resources = [activityService.show(this.$route.params.activity_id)];
@@ -136,6 +131,7 @@ export default defineComponent({
           this.loading = false;
         });
   },
+  
   methods: {
     onSubmit() {
       const formData = new FormData();
@@ -153,7 +149,7 @@ export default defineComponent({
     },
     formatDate(timestamp) {
       return date.formatDate(timestamp, 'YYYY-MM-DD HH:mm:ss');
-    }
+    },
   },
 });
 </script>

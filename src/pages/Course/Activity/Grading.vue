@@ -57,12 +57,7 @@
         style="height: 470px;"
         :fit="'contain'"
       />
-        <q-pdfviewer
-          v-else
-          style="height: 470px;"
-          type="html5"
-          :src="answerFilePath"
-        />
+        <PdfViewer v-show="answerFilePath && !isImage(answerFilePath)" :src="answerFilePath" :id="`grading-${student?.id}`"/>
         <q-form
           @submit="onSubmitScore"
           class="q-gutter-md q-pt-md"
@@ -93,9 +88,13 @@ import { defineComponent } from "vue";
 import { mapGetters, mapMutations } from "vuex";
 import studentService from "../../../services/student";
 import activityService from "../../../services/activity";
+import PdfViewer from "../../../components/PdfViewer";
 
 export default defineComponent({
   name: "Grading",
+  components: {
+    PdfViewer
+  },
   data() {
     return {
       dialog: false,
@@ -120,7 +119,7 @@ export default defineComponent({
       isTeacher: "isTeacher",
     }),
     answerFilePath() {
-      return `${process.env.API}/${this.student.answers[0]['file']}`;
+      return this.student.answers[0]['file'];
     }
   },
   mounted() {

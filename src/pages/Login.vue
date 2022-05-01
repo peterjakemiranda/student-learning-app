@@ -8,7 +8,7 @@
         items-center
         text-white
       "
-      style="background: linear-gradient(#0470d9, #1f8fff)"
+      style="background: linear-gradient(#19a3d1, #31CCEC)"
     >
       <div class="column q-pa-lg">
         <div class="row">
@@ -22,7 +22,7 @@
                 <q-img :src="logoImage" style="width: 72px"/>
               </q-avatar>
               <div class="text-h5 text-center q-mb-md text-weight-bold">
-                Student Handbook
+                Student Learning
               </div>
             </div>
             <q-card-section>

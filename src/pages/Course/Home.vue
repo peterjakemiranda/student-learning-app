@@ -12,7 +12,7 @@
         <q-card-section horizontal>
           <q-card-section class="q-pt-xs">
             <div class="text-h7 q-mt-xs q-mb-xs">Course Code: {{course?.course_code}}</div>
-            <div class="text-h7 q-mt-xs q-mb-xs" v-if="course?.virtual_class_link">Virtual Class Link: <a target="_blank" :href="course.virtual_class_link">{{course.virtual_class_link}}</a></div>
+            <div class="text-h7 q-mt-xs q-mb-xs flex items-center" v-if="course?.virtual_class_link">Virtual Class: <a target="_blank" :href="course.virtual_class_link" style="margin-left: 10px"><img :src="getVirtualClassLogo(course.virtual_class_link)" style="height: 50px;"/></a></div>
             <div class="text-caption text-grey" v-if="course?.description">{{course?.description}}</div>
             <div class="text-caption text-grey" v-if="course?.start">{{course.start}} - {{course.end}}</div>
           </q-card-section>
@@ -83,6 +83,9 @@ import { mapGetters, mapMutations } from "vuex";
 import courseService from "../../services/course";
 import HeaderMenu from "./HeaderMenu.vue"
 import store from "../../store";
+import jitsiMeetLogo from "../../assets/jitsi.png";
+import googleMeetLogo from "../../assets/google-meet.png";
+import videoCamLogo from "../../assets/video-camera-icon.png";
 
 export default defineComponent({
   name: "ViewCourse",
@@ -115,7 +118,15 @@ export default defineComponent({
     }
   },
   methods: {
-    
+    getVirtualClassLogo(link) {
+      if(link.includes('meet.jit.si')) {
+        return jitsiMeetLogo;
+      }
+      if(link.includes('meet.google.com')) {
+        return googleMeetLogo;
+      }
+      return videoCamLogo;
+    }
   },
 });
 </script>
