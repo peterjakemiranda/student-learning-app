@@ -8,7 +8,7 @@
         items-center
         text-white
       "
-      style="background: linear-gradient(#0470d9, #1f8fff)"
+      style="background: linear-gradient(#0470D9, #1F8FFF)"
     >
       <div class="column q-pa-lg">
         <div class="row">
@@ -22,7 +22,7 @@
                 <q-img :src="logoImage" style="width: 72px"/>
               </q-avatar>
               <div class="text-h5 text-center q-mb-md text-weight-bold">
-                Student Learning
+                Lantaw
               </div>
             </div>
             <div class="text-h6 q-px-lg q-pb-xs q-pt-lg">Password Recovery</div>
@@ -82,7 +82,7 @@
 <script>
 import { defineComponent } from "vue";
 import authService from "./../services/auth";
-import logoImage from "../assets/sdssu_logo.png";
+import logoImage from "../assets/lantaw-logo-white.png";
 
 export default defineComponent({
   name: "ForgotPassword",

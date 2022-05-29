@@ -57,6 +57,7 @@ export default defineComponent({
       email: "",
       password: "",
       password_confirmation: "",
+      profile: "",
     };
   },
   computed: {
@@ -94,6 +95,7 @@ export default defineComponent({
           this.loading = false;
         });
     },
+    viewP
   },
   watch: {
     account: {

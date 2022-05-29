@@ -68,7 +68,7 @@ module.exports = configure(function (ctx) {
           .use(ESLintPlugin, [{ extensions: ["js", "vue"] }]);
       },
       env: {
-        API: "https://student-learning-api.herokuapp.com",
+        API: "http://localhost:8000",
         VUE_ENV: 'client',
       },
     },

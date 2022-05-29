@@ -63,7 +63,10 @@
                 {{ student.email }}</q-item-label>
             </q-item-section>
             <q-item-section side>
-              <q-btn outline color="primary" label="Add" @click="add(student)"/>
+              <div class="row justify-center q-gutter-md q-pa-xs q-mt-md">
+                <q-btn color="secondary" label="View Profile" @click="view(student)"/>
+                <q-btn outline color="primary" label="Add" @click="add(student)"/>
+              </div>
             </q-item-section>
           </q-item>
         </q-list>
@@ -74,6 +77,36 @@
       </div>
     </div>
   </div>
+  <q-dialog v-model="viewProfileModal" @hide="hideProfileModal">
+      <q-card>
+        <q-card-section>
+          <div class="text-h6">View Profile</div>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section style="min-width: 350px" class="scroll">
+          <q-list dense bordered padding class="rounded-borders">
+            <q-item>
+              <q-item-section>
+                Name: {{profile?.fullname}}
+              </q-item-section>
+            </q-item>
+            <q-item>
+              <q-item-section>
+                Email: {{profile?.email}}
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-actions align="right">
+          <q-btn flat label="Ok" color="primary" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
 </template>
 
 <script>
@@ -87,10 +120,12 @@ export default defineComponent({
   name: "SearchStudent",
   data() {
     return {
+      viewProfileModal: false,
       loading: false,
       searchText: "",
       page: 1,
       limit: 10,
+      profile: null,
     };
   },
   computed: {
@@ -172,6 +207,13 @@ export default defineComponent({
         });
       })
     },
+    view(student) {
+      this.profile = student;
+      this.viewProfileModal = true;
+    },
+    hideProfileModal() {
+      this.profile = null;
+    }
   },
   watch: {
     searchText(searchText) {

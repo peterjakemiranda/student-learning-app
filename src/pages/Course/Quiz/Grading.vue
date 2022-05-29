@@ -1,6 +1,8 @@
 <template>
   <div class="q-pa-none">
     <div class="text-subtitle1 q-pa-xs">Points: {{quiz?.points}}</div>
+    <div class="text-subtitle1 q-pa-xs">Highest Score: <span v-if="highestScore?.quiz_score">{{highestScore.quiz_score.score}} ({{highestScore.fullname}})</span></div>
+    <div class="text-subtitle1 q-pa-xs">Lowest Score: <span v-if="lowestScore?.quiz_score">{{lowestScore.quiz_score.score}} ({{lowestScore.fullname}})</span></div>
     <q-list bordered>
       <q-item class="q-ma-none q-py-none">
         <q-item-section>
@@ -109,6 +111,13 @@ export default defineComponent({
       students: "allStudents",
       isTeacher: "isTeacher",
     }),
+    highestScore() {
+
+      return this.students.length ? this.students.filter(student => student?.quiz_score).reduce((max, student) => max?.quiz_score?.score > student?.quiz_score?.score ? max : student) : null;
+    },
+    lowestScore() {
+      return this.students.length ? this.students.filter(student => student?.quiz_score).reduce((max, student) => max?.quiz_score?.score < student?.quiz_score?.score ? max : student) : null;
+    }
   },
   mounted() {
     this.fetchStudents();

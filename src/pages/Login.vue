@@ -8,7 +8,7 @@
         items-center
         text-white
       "
-      style="background: linear-gradient(#19a3d1, #31CCEC)"
+      :style="`background: url('${bgImage}');background-size: cover;`"
     >
       <div class="column q-pa-lg">
         <div class="row">
@@ -22,7 +22,7 @@
                 <q-img :src="logoImage" style="width: 72px"/>
               </q-avatar>
               <div class="text-h5 text-center q-mb-md text-weight-bold">
-                Student Learning
+                Lantaw
               </div>
             </div>
             <q-card-section>
@@ -111,12 +111,14 @@
 import { defineComponent } from "vue";
 import authService from "./../services/auth";
 import accountService from "./../services/account";
-import logoImage from "../assets/sdssu_logo.png";
+import logoImage from "../assets/lantaw-logo-white.png";
+import bgImage from "../assets/sdssu-bg.png";
 
 export default defineComponent({
   name: "Login",
   data() {
     return {
+      bgImage,
       logoImage,
       loading: false,
       isPwd: true,

@@ -22,7 +22,7 @@
         <q-avatar>
           <q-img :src="logoImage" />
         </q-avatar>
-        <q-toolbar-title>Student Learning</q-toolbar-title>
+        <q-toolbar-title>Lantaw</q-toolbar-title>
       </q-toolbar>
     </q-header>
     <q-drawer
@@ -112,7 +112,7 @@
 import { defineComponent, ref } from "vue";
 import { mapGetters, mapMutations } from "vuex";
 import bgImage from "../assets/5559852.jpg";
-import logoImage from "../assets/sdssu_logo.png";
+import logoImage from "../assets/lantaw-logo-white.png";
 import studentImage from "../assets/student.png";
 import authService from "./../services/auth";
 import accountService from "./../services/account";

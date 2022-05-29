@@ -8,7 +8,7 @@
         items-center
         text-white
       "
-      style="background: linear-gradient(#19a3d1, #31CCEC)"
+      style="background: linear-gradient(#0470D9, #1F8FFF)"
     >
       <div class="column">
         <div class="row">
@@ -22,7 +22,7 @@
                 <q-img :src="logoImage" style="width: 72px"/>
               </q-avatar>
               <div class="text-h5 text-center q-mb-md text-weight-bold">
-                Student Learning
+                Lantaw
               </div>
             </div>
             <q-card-section>
@@ -86,9 +86,10 @@
                   v-model="password"
                   type="password"
                   label="Password"
-                  lazy-rules
                   :rules="[
                     (val) => (val && val.length > 0) || 'Password is required',
+                    (val) => (val && val.length >= 6) || 'Please use minimum 6 characters',
+                    (val) => (val && String(val).match('.*([a-zA-Z].*[0-9]|[0-9].*[a-zA-Z]).*')) || 'Password must contain alphanumeric combination',
                   ]"
                 >
                   <template v-slot:prepend>
@@ -145,7 +146,7 @@
 <script>
 import { defineComponent } from "vue";
 import authService from "./../services/auth";
-import logoImage from "../assets/sdssu_logo.png";
+import logoImage from "../assets/lantaw-logo-white.png";
 
 export default defineComponent({
   name: "Register",
@@ -175,6 +176,7 @@ export default defineComponent({
           this.loading = false;
         })
         .catch((errors) => {
+          console.log(errors?.data?.password);
           this.loading = false;
         });
     },

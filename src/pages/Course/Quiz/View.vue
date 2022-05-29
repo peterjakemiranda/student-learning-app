@@ -15,12 +15,20 @@
     </q-page-sticky>
     <div class="text-h5 q-mb-sm q-pt-xl q-pb-xs">{{quiz?.title}}</div>
     <q-btn
-        v-if="course && isTeacher"
+        v-if="course && isTeacher && !quiz.archive"
         :to="`/courses/${course.id}/quizzes/${quiz?.id}/edit`"
         color="primary"
         icon="edit"
         label="Edit"
         class="q-mb-md"
+      />
+    <q-btn
+        v-if="course && isTeacher && !quiz.archive"
+        @click="archiveQuiz(quiz)"
+        color="warning"
+        icon="archive"
+        label="Archive"
+        class="q-mb-md q-ml-sm"
       />
     <q-btn
         v-if="course && isTeacher"
@@ -159,6 +167,26 @@ export default defineComponent({
         })
         .onOk(() => {
             quizService.destroy(this.$route.params.quiz_id)
+            .then((data) => {
+              self.$router.push(`/courses/${this.course?.id}/quizzes`);
+              self.loading = false;
+            })
+            .catch((err) => {
+              self.loading = false;
+            });
+        });
+    },
+    archiveQuiz(quiz) {
+      const self = this;
+      this.$q
+        .dialog({
+          title: "Confirm",
+          message: "Are you sure to archive this quiz, this will be hidden to all students?",
+          cancel: true,
+          persistent: true,
+        })
+        .onOk(() => {
+            quizService.archive(this.$route.params.quiz_id, {archive: 1})
             .then((data) => {
               self.$router.push(`/courses/${this.course?.id}/quizzes`);
               self.loading = false;

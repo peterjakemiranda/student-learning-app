@@ -8,6 +8,7 @@ import destroy from "./destroy";
 import submitAnswer from "./submitAnswer";
 import submitScore from "./submitScore";
 import toggle from "./toggle";
+import archive from "./archive";
 
 export default {
   store,
@@ -20,4 +21,5 @@ export default {
   submitAnswer,
   submitScore,
   toggle,
+  archive
 };
