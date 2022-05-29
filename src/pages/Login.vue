@@ -112,7 +112,7 @@ import { defineComponent } from "vue";
 import authService from "./../services/auth";
 import accountService from "./../services/account";
 import logoImage from "../assets/lantaw-logo-white.png";
-import bgImage from "../assets/sdssu-bg.png";
+import bgImage from "../assets/sdssu-bg.jpg";
 
 export default defineComponent({
   name: "Login",
