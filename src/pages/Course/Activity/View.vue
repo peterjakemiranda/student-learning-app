@@ -84,7 +84,7 @@ import courseService from "../../../services/course";
 import activityService from "../../../services/activity";
 import { date } from 'quasar'
 import Grading from './Grading.vue';
-import PdfViewer from "../../../components/PdfViewer";
+import PdfViewer from "../../../components/PDFViewer";
 
 export default defineComponent({
   name: "ActivityView",

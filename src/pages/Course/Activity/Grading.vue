@@ -88,7 +88,7 @@ import { defineComponent } from "vue";
 import { mapGetters, mapMutations } from "vuex";
 import studentService from "../../../services/student";
 import activityService from "../../../services/activity";
-import PdfViewer from "../../../components/PdfViewer";
+import PdfViewer from "../../../components/PDFViewer";
 
 export default defineComponent({
   name: "Grading",
