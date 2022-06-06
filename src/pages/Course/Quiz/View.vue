@@ -15,7 +15,7 @@
     </q-page-sticky>
     <div class="text-h5 q-mb-sm q-pt-xl q-pb-xs">{{quiz?.title}}</div>
     <q-btn
-        v-if="course && isTeacher && !quiz.archive"
+        v-if="course && isTeacher && !quiz?.archive"
         :to="`/courses/${course.id}/quizzes/${quiz?.id}/edit`"
         color="primary"
         icon="edit"
@@ -23,7 +23,7 @@
         class="q-mb-md"
       />
     <q-btn
-        v-if="course && isTeacher && !quiz.archive"
+        v-if="course && isTeacher && !quiz?.archive"
         @click="archiveQuiz(quiz)"
         color="warning"
         icon="archive"

@@ -113,10 +113,10 @@ export default defineComponent({
     }),
     highestScore() {
 
-      return this.students.length ? this.students.filter(student => student?.quiz_score).reduce((max, student) => max?.quiz_score?.score > student?.quiz_score?.score ? max : student) : null;
+      return this.students.length && this.students.filter(student => student?.quiz_score).length ? this.students.filter(student => student?.quiz_score).reduce((max, student) => max?.quiz_score?.score > student?.quiz_score?.score ? max : student) : null;
     },
     lowestScore() {
-      return this.students.length ? this.students.filter(student => student?.quiz_score).reduce((max, student) => max?.quiz_score?.score < student?.quiz_score?.score ? max : student) : null;
+      return this.students.length && this.students.filter(student => student?.quiz_score).length ? this.students.filter(student => student?.quiz_score).reduce((max, student) => max?.quiz_score?.score < student?.quiz_score?.score ? max : student) : null;
     }
   },
   mounted() {
